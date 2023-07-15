@@ -1,0 +1,105 @@
+/* stylelint-disable scss/dollar-variable-pattern */
+/* stylelint-disable scss/dollar-variable-empty-line-before */
+/* stylelint-disable order/properties-order */
+
+// main colors
+
+$primaryT500: #e3a3a3;
+$primaryT400: #d57575;
+$primaryT300: #ce5e5e;
+$primaryT200: #c74747;
+$primaryT100: #c03030;
+$primary: #b91919;
+$primaryS100: #a71717;
+$primaryS200: #941414;
+$primaryS300: #821212;
+$primaryS400: #6f0f0f;
+$primaryS500: #5d0d0d;
+
+$primaryLight: #b9191947;
+
+// secondary
+
+$secondary: #d93501;
+$secondary2: #e3593b;
+$secondary3: #ff9077;
+
+$secondaryT500: #f4c2b3;
+$secondaryT400: #e88667;
+$secondaryT300: #e4724d;
+$secondaryT200: #e15d34;
+$secondaryT100: #dd491a;
+$secondary: #d93501;
+$secondaryS100: #c33001;
+$secondaryS200: #ae2a01;
+$secondaryS300: #982501;
+$secondaryS400: #6d1b01;
+$secondaryS500: #571500;
+
+// neutral colors
+
+$whiteT200: #fff;
+$whiteT100: #fefefe;
+$white: #fdfdfd;
+$whiteS100: #e4e4e4;
+$whiteS200: #cacaca;
+$whiteS300: #b1b1b1;
+$whiteS400: #989898;
+$whiteS500: #7f7f7f;
+
+$black: #000;
+
+$greyLight: #e9e9e9;
+
+// feedback colors
+
+$success: #44c969;
+$successLight: #ccf4d7;
+$warning: #ffb800;
+$danger: #ee2828;
+$dangerLight: #f9e1e1;
+
+:export {
+  primaryT500: $primaryT500;
+  primaryT400: $primaryT400;
+  primaryT300: $primaryT300;
+  primaryT200: $primaryT200;
+  primaryT100: $primaryT100;
+  primary: $primary;
+  primaryS100: $primaryS100;
+  primaryS200: $primaryS200;
+  primaryS300: $primaryS300;
+  primaryS400: $primaryS400;
+  primaryS500: $primaryS500;
+
+  primaryLight: $primaryLight;
+
+  secondaryT500: $secondaryT500;
+  secondaryT400: $secondaryT400;
+  secondaryT300: $secondaryT300;
+  secondaryT200: $secondaryT200;
+  secondaryT100: $secondaryT100;
+  secondary: $secondary;
+  secondaryS100: $secondaryS100;
+  secondaryS200: $secondaryS200;
+  secondaryS300: $secondaryS300;
+  secondaryS400: $secondaryS400;
+  secondaryS500: $secondaryS500;
+
+  whiteT200: $whiteT200;
+  whiteT100: $whiteT100;
+  white: $white;
+  whiteS100: $whiteS100;
+  whiteS200: $whiteS200;
+  whiteS300: $whiteS300;
+  whiteS400: $whiteS400;
+  whiteS500: $whiteS500;
+
+  black: $black;
+
+  danger: $danger;
+  dangerLight: $dangerLight;
+  success: $success;
+  successLight: $successLight;
+  warning: $warning;
+}
