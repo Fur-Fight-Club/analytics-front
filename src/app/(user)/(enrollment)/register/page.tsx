@@ -41,6 +41,8 @@ export default function RegisterPage() {
             kbis,
             phoneNumber: phone,
             websiteURL: website,
+            isVerified: false,
+            role: "USER",
           };
           await db
             .setDoc(
@@ -48,17 +50,6 @@ export default function RegisterPage() {
               userData
             )
             .then(() => {
-              console.log("Document successfully written!");
-              setUser({
-                uid: userCredential.user.uid,
-                email,
-                isVerified: false,
-                companyName,
-                kbis,
-                phoneNumber: phone,
-                websiteURL: website,
-                role: "USER",
-              });
               toast.success("Votre compte a été créé avec succès");
             });
           console.log(user);
@@ -180,6 +171,9 @@ export default function RegisterPage() {
                 onPress={() => handleRegister()}
               >
                 M'inscrire
+              </Button>
+              <Button light onPress={() => router.push("login")}>
+                Me connecter
               </Button>
             </Card.Footer>
           </Card>
