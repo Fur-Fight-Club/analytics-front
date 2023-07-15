@@ -22,6 +22,7 @@ export default function RegisterPage() {
       await signInWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           // Signed in
+          toast.success("Vous êtes connecté");
           console.log(userCredential);
           const userDoc = await db.doc(
             db.firestore,
