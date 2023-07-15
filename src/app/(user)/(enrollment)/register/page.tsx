@@ -36,7 +36,12 @@ export default function RegisterPage() {
       await createUserWithEmailAndPassword(auth, email, password)
         .then(async (userCredential) => {
           // Signed in
-          const userData = {};
+          const userData = {
+            companyName,
+            kbis,
+            phoneNumber: phone,
+            websiteURL: website,
+          };
           await db
             .setDoc(
               db.doc(db.firestore, "users", userCredential.user.uid),
