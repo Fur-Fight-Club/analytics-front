@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { useLocalStorage } from "@/hooks/localStorage.hook";
+import { User, initialUser } from "@/types/user.type";
+import { checkIfUserIsAdmin, checkIfUserIsLoggedIn } from "@/utils/utils";
 import {
   Avatar,
   Button,
@@ -19,6 +22,13 @@ const NavbarFFC = () => {
 
   const [isUserLogged, setIsUserLogged] = useState(false);
   const [isUserisAdmin, setIsUserisAdmin] = useState(false);
+
+  const [user, setUser] = useLocalStorage<User>("user", initialUser);
+
+  useEffect(() => {
+    setIsUserLogged(checkIfUserIsLoggedIn(user));
+    setIsUserisAdmin(checkIfUserIsAdmin(user));
+  }, [user]);
 
   const isInUrl = (path: string) => {
     return pathname.includes(path);
