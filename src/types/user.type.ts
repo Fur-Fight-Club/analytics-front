@@ -6,7 +6,7 @@ export interface User {
   phoneNumber: string;
   websiteURL: string;
   isVerified: boolean;
-  role: "ADMIN" | "USER";
+  role: "ADMIN" | "USER" | "null";
 }
 
 export const initialUser: User = {
@@ -17,5 +17,5 @@ export const initialUser: User = {
   phoneNumber: "",
   websiteURL: "",
   isVerified: false,
-  role: "USER",
+  role: "null",
 };
