@@ -5,19 +5,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { useLocalStorage } from "@/hooks/localStorage.hook";
+import { User, initialUser } from "@/types/user.type";
 import { Flex } from "@/utils/flex";
 import { Button } from "@nextui-org/react";
-import {
-  CaretCircleLeft,
-  ChartDonut,
-  CreditCard,
-  Ghost,
-  House,
-  MapPin,
-  SignOut,
-  UserRectangle,
-  UsersFour,
-} from "@phosphor-icons/react";
+import { CaretCircleLeft, ChartDonut, SignOut } from "@phosphor-icons/react";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 
 export const SidebarAdmin = () => {
@@ -27,6 +19,13 @@ export const SidebarAdmin = () => {
 
   const { collapseSidebar } = useProSidebar();
   const [collapsed, setCollapsed] = useState(false);
+
+  const [user, setUser] = useLocalStorage<User>("user", initialUser);
+
+  const logoutUser = () => {
+    setUser(initialUser);
+    router.push("/");
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -53,6 +52,7 @@ export const SidebarAdmin = () => {
   };
 
   const handleLogout = () => {
+    logoutUser();
     redirectTo("/");
   };
 
@@ -81,82 +81,6 @@ export const SidebarAdmin = () => {
             style={pathname === "/admin" ? { fontWeight: "bold" } : {}}
           >
             Dashboard
-          </MenuItem>
-          <MenuItem
-            component={<Link href="/admin/accounts" />}
-            icon={
-              pathname === "/admin/accounts" ? (
-                <UserRectangle size={25} color="black" weight="fill" />
-              ) : (
-                <UserRectangle size={25} color="#e0dfdb" weight="light" />
-              )
-            }
-            style={pathname === "/admin/accounts" ? { fontWeight: "bold" } : {}}
-          >
-            Utilisateurs
-          </MenuItem>
-          <MenuItem
-            component={<Link href="/admin/arena" />}
-            icon={
-              pathname === "/admin/arena" ? (
-                <MapPin size={25} color="black" weight="fill" />
-              ) : (
-                <MapPin size={25} color="#e0dfdb" weight="light" />
-              )
-            }
-            style={pathname === "/admin/arena" ? { fontWeight: "bold" } : {}}
-          >
-            Arènes
-          </MenuItem>
-          <MenuItem
-            component={<Link href="/admin/tournaments" />}
-            icon={
-              pathname === "/admin/tournaments" ? (
-                <UsersFour size={25} color="black" weight="fill" />
-              ) : (
-                <UsersFour size={25} color="#e0dfdb" weight="light" />
-              )
-            }
-            style={
-              pathname === "/admin/tournaments" ? { fontWeight: "bold" } : {}
-            }
-          >
-            Tournois
-          </MenuItem>
-
-          <MenuItem
-            component={<Link href="/admin/monster" />}
-            icon={
-              pathname === "/admin/monster" ? (
-                <Ghost size={25} color="black" weight="fill" />
-              ) : (
-                <Ghost size={25} color="#e0dfdb" weight="light" />
-              )
-            }
-            style={pathname === "/admin/monster" ? { fontWeight: "bold" } : {}}
-          >
-            Monstres
-          </MenuItem>
-
-          <MenuItem
-            component={<Link href="/admin/payement" />}
-            icon={
-              pathname === "/admin/payement" ? (
-                <CreditCard size={25} color="black" weight="fill" />
-              ) : (
-                <CreditCard size={25} color="#e0dfdb" weight="light" />
-              )
-            }
-            style={pathname === "/admin/payement" ? { fontWeight: "bold" } : {}}
-          >
-            Payements
-          </MenuItem>
-
-          <MenuItem
-            icon={<House size={25} color="#e0dfdb" weight="light" />}
-            onClick={() => router.push("/")}
-          >
-            Retour page d'accueil
           </MenuItem>
 
           <MenuItem
