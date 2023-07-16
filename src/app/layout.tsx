@@ -72,7 +72,11 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <Toaster />
+        <Toaster
+          containerStyle={{
+            zIndex: 999999999,
+          }}
+        />
 
         {children}
       </body>
