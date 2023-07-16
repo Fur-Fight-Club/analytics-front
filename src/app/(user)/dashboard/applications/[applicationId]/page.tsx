@@ -1,11 +1,40 @@
+"use client";
+import { db } from "@/firebase";
+import { useLocalStorage } from "@/hooks/localStorage.hook";
+import { Application } from "@/types/application.type";
+import { User, initialUser } from "@/types/user.type";
+import { Spacer, Text } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+
 type ApplicationDashboard = {};
 
-const ApplicationDashboard = () => {
+const ApplicationDashboard = ({
+  params,
+}: {
+  params: { applicationId: string };
+}) => {
+  const [user, setUser] = useLocalStorage<User>("user", initialUser);
+  const [application, setApplication] = useState<Application>();
+
+  useEffect(() => {
+    db.application.get(params.applicationId).then((app) => {
+      setApplication(app);
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(application);
+  }, [application]);
+
   return (
-    <>
-      <h1>Application dashboard</h1>
-      <p>{"Ici les composants KPIS analytics de l'application sélectionnée"}</p>
-    </>
+    <div>
+      <Text h1>Analytics — {application?.name}</Text>
+      <Text h3>{application?.description}</Text>
+      <Spacer y={1} />
+      <Text>
+        Application ID : <Text i>{application?.applicationId}</Text>
+      </Text>
+    </div>
   );
 };
 

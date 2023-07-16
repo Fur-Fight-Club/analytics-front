@@ -130,7 +130,7 @@ export default function DashboardApps() {
                 <Button
                   auto
                   onPress={() =>
-                    router.push(`/dashboard/analytics/${app.applicationId}`)
+                    router.push(`/dashboard/applications/${app.applicationId}`)
                   }
                 >
                   Voir les statistiques
