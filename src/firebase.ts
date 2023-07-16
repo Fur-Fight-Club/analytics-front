@@ -151,7 +151,7 @@ const widgets = {
     const widgetsCollection = await db.collection(db.firestore, "widgets");
     const widgetsCollectionData = await db.getDocs(widgetsCollection);
     const widgetsData = widgetsCollectionData.docs.map((doc) => doc.data());
-    return widgetsData.filter((w) => w.clientId === appId) as Widget[];
+    return widgetsData.filter((w) => w.appId === appId) as Widget[];
   },
   create: async (data: Widget) => {
     const uuid = uuidv4();
