@@ -1,13 +1,15 @@
 "use client";
 import { createTheme } from "@nextui-org/react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import styles from "./_colors.module.scss";
 import { Toaster } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "react-query";
+import styles from "./_colors.module.scss";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const queryClient = new QueryClient();
 
 const metadata: Metadata = {
   title: "Web Analytics",
@@ -77,8 +79,9 @@ export default function RootLayout({
             zIndex: 999999999,
           }}
         />
-
-        {children}
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
       </body>
     </html>
   );

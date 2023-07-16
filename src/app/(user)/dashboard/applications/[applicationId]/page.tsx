@@ -14,6 +14,7 @@ import { Button, Grid, Spacer, Text } from "@nextui-org/react";
 import dynamic from "next/dynamic";
 import { Layout } from "phosphor-react";
 import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { ModalAddWidget } from "../../components/ModalAddWidget.component";
 
 type ApplicationDashboard = {};
@@ -26,6 +27,56 @@ const ApplicationDashboard = ({
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
   const [application, setApplication] = useState<Application>();
   const [widgets, setWidgets] = useState<Widget[]>();
+
+  const appId = "TODO"; // TODO fill this with the real appId
+  const clientId = "TODO"; // TODO fill this with the real clientId
+  const clientSecret = "TODO"; // TODO fill this with the real clientSecret
+
+  const headers = {
+    "x-app-id": appId,
+    "x-client-id": clientId,
+    "x-client-secret": clientSecret,
+  };
+
+  const fetchData = (endpoint: string) => {
+    return fetch(`http://localhost:4001/events/${endpoint}`, {
+      method: "GET",
+      headers: headers,
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+      return response.json();
+    });
+  };
+
+  const mouseClickQuery = useQuery("mouseClickData", () =>
+    fetchData("mouse-click")
+  );
+
+  const buttonClickQuery = useQuery("buttonClickData", () =>
+    fetchData("button-click")
+  );
+
+  const pathnameChangeQuery = useQuery("pathnameChangeData", () =>
+    fetchData("pathname-change")
+  );
+
+  const leaveAppQuery = useQuery("leaveAppData", () => fetchData("leave-app"));
+
+  const demographicQuery = useQuery("demographicData", () =>
+    fetchData("demographic-data")
+  );
+
+  const cardsQuery = useQuery("cardsData", () => fetchData("cards-data"));
+
+  const tablesQuery = useQuery("tablesData", () => fetchData("tables-data"));
+
+  const chartQuery = useQuery("chartsData", () => fetchData("charts-data"));
+
+  const getHeatmapData = async () => {};
+
+  const queryClient = useQueryClient();
 
   // TODO : update Model used in state below
 
