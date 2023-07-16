@@ -45,8 +45,18 @@ export interface LineWidget extends BaseWidget {
   days: number;
 }
 
+export enum DoughnutStat {
+  AVERAGE_TIME_SPENT = "AVERAGE_TIME_SPENT",
+  PLATFORMS_PROPORTIONS = "PLATFORMS_PROPORTIONS",
+  BROWSERS_PROPORTIONS = "BROWSERS_PROPORTIONS",
+  LANGUAGES_PROPORTIONS = "LANGUAGES_PROPORTIONS",
+  COUNTRIES_PROPORTIONS = "COUNTRIES_PROPORTIONS",
+  INTERNET_PROVIDERS_PROPORTIONS = "INTERNET_PROVIDERS_PROPORTIONS",
+}
 export interface DoughnutWidget extends BaseWidget {
   type: WidgetType.DOUGHNUT;
+  doughnutStat: DoughnutStat;
+  chartName: string;
 }
 
 export interface TableWidget extends BaseWidget {
