@@ -118,6 +118,10 @@ export default function DashboardPage() {
                   <Button>
                     <a href="/AnalyticsSDK.zip">Download</a>
                   </Button>
+                  <Spacer y={1} />
+                  <Text h3 color="error">
+                    !! Attention le SDK et disponible uniquement sur NextJs
+                  </Text>
                 </Card.Body>
               </Card>
             </Grid>
