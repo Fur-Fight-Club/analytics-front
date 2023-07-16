@@ -11,6 +11,7 @@ import { Application } from "@/types/application.type";
 import { User, initialUser } from "@/types/user.type";
 import { Widget } from "@/types/widget.type";
 import { Button, Grid, Spacer, Text } from "@nextui-org/react";
+import dynamic from "next/dynamic";
 import { Layout } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { ModalAddWidget } from "../../components/ModalAddWidget.component";
@@ -37,6 +38,16 @@ const ApplicationDashboard = ({
   const [statsCardsData, setStatsCardsData] = useState<{}>();
   const [isFetchingStatsCardsData, setIsFetchingStatsCardsData] =
     useState(false);
+
+  const HeatmapNoSSR = dynamic(
+    () =>
+      import("/src/app/components/KPIS/ClickHeatmap.component").then(
+        (mod) => mod.ClickHeatmap
+      ),
+    {
+      ssr: false,
+    }
+  );
 
   useEffect(() => {
     db.application.get(params.applicationId).then((app) => {

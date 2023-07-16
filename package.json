@@ -31,7 +31,9 @@
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-leaflet": "^4.2.1",
+    "react-leaflet-heatmap-layer": "^2.0.0",
     "react-pro-sidebar": "^1.1.0-alpha.1",
+    "react-query": "^3.39.3",
     "sass": "^1.63.6",
     "typescript": "5.1.6",
     "uuidv4": "^6.2.13"
