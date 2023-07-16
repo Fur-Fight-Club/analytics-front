@@ -15,7 +15,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   if (checkIfUserIsAdmin(user)) {
     return (
-      <main style={{ height: "100%" }}>
+      <main style={{ height: "100%", backgroundColor: "#f9f9f9" }}>
         <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
           <ProSidebarProvider>
             <SidebarAdmin />

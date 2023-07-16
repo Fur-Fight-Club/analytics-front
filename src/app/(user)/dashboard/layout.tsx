@@ -6,13 +6,15 @@ import { User, initialUser } from "@/types/user.type";
 import { checkIfUserIsAdmin, checkIfUserIsLoggedIn } from "@/utils/utils";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import { SidebarUser } from "./components/sidebar";
+import { useRouter } from "next/navigation";
 
-type AdminLayoutProps = {
+type DashboardLayoutProps = {
   children: React.ReactNode;
 };
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
+export default function AdminLayout({ children }: DashboardLayoutProps) {
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
+  const router = useRouter();
 
   if (!checkIfUserIsAdmin(user) && checkIfUserIsLoggedIn(user)) {
     return (
@@ -28,6 +30,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       </main>
     );
   } else {
-    throw new Error("Vous devez être utilisateurs pour accéder à cette page");
+    router.push("/admin");
   }
 }
