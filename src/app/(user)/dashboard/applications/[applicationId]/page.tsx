@@ -1,4 +1,5 @@
 "use client";
+import { DoughnutChart } from "@/app/components/KPIS/Chart/DoughnutChart.component";
 import { db } from "@/firebase";
 import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { Application } from "@/types/application.type";
@@ -15,6 +16,9 @@ const ApplicationDashboard = ({
 }) => {
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
   const [application, setApplication] = useState<Application>();
+
+  const [chartsData, setChartsData] = useState<{}>();
+  const [isFetchingChartsData, setIsFetchingChartsData] = useState(false);
 
   useEffect(() => {
     db.application.get(params.applicationId).then((app) => {
@@ -35,6 +39,19 @@ const ApplicationDashboard = ({
       <Text>
         Application ID : <Text i>{application?.applicationId}</Text>
       </Text>
+      <Spacer y={1} />
+      <Text h2>Test doughtnutChart</Text>
+      {/* TODO : Update with real data from firestore */}
+      <DoughnutChart
+        labels={chartsData?.averages.timeSpent.labels ?? []}
+        dataset={{
+          label: "Temps passé en moyenne (en ms)",
+          data: chartsData?.averages.timeSpent.data ?? [],
+        }}
+        loading={isFetchingChartsData}
+      >
+        Temps passé en moyenne sur une page
+      </DoughnutChart>
     </div>
   );
 };
