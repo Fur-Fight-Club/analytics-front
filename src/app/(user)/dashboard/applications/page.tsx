@@ -4,13 +4,13 @@ import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { Application } from "@/types/application.type";
 import { User, initialUser } from "@/types/user.type";
 import {
-  Text,
-  Grid,
   Button,
-  Modal,
-  Input,
   Card,
+  Grid,
+  Input,
+  Modal,
   Spacer,
+  Text,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import {
@@ -39,6 +39,7 @@ export default function DashboardApps() {
     db.application.getByClientId(user.clientId ?? "").then((applications) => {
       setApplications(applications);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClose = () => {
@@ -79,8 +80,8 @@ export default function DashboardApps() {
       </Grid.Container>
       <Spacer y={1} />
       <Grid.Container gap={2}>
-        {applications.map((app) => (
-          <Grid xs={12} md={4}>
+        {applications.map((app, i) => (
+          <Grid key={i} xs={12} md={4}>
             <Card
               css={{
                 padding: "1rem",
