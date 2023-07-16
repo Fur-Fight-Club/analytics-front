@@ -1,6 +1,7 @@
 "use client";
 import { DoughnutChart } from "@/app/components/KPIS/Chart/DoughnutChart.component";
 import { LineChart } from "@/app/components/KPIS/Chart/LineChart.component";
+import { AverageTimeSpentTable } from "@/app/components/KPIS/Table/AverageTimeSpentTable.component";
 import { db } from "@/firebase";
 import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { Application } from "@/types/application.type";
@@ -20,6 +21,9 @@ const ApplicationDashboard = ({
 
   const [chartsData, setChartsData] = useState<{}>();
   const [isFetchingChartsData, setIsFetchingChartsData] = useState(false);
+
+  const [tablesData, settablesData] = useState<{}>();
+  const [isFetchingTablesData, setIsFetchingTablesData] = useState(false);
 
   useEffect(() => {
     db.application.get(params.applicationId).then((app) => {
@@ -42,8 +46,9 @@ const ApplicationDashboard = ({
       </Text>
       <Spacer y={1} />
       <Text h2>Test doughtnutChart</Text>
-      {/* TODO : Update with real data from firestore */}
       <Spacer y={0.5} />
+
+      {/* TODO : Update with real data from firestore */}
       <DoughnutChart
         labels={chartsData?.averages.timeSpent.labels ?? []}
         dataset={{
@@ -54,6 +59,7 @@ const ApplicationDashboard = ({
       >
         Temps passé en moyenne sur une page
       </DoughnutChart>
+
       <Spacer y={0.5} />
       <DoughnutChart
         labels={chartsData?.averages.timeSpent.labels ?? []}
@@ -67,6 +73,8 @@ const ApplicationDashboard = ({
       </DoughnutChart>
       <Spacer y={1} />
       <Text h2>Test lineChart</Text>
+
+      {/* TODO : Update with real data from firestore */}
       <LineChart
         labels={["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J-0"]}
         dataset={{
@@ -79,6 +87,8 @@ const ApplicationDashboard = ({
       >
         Nombre de visite des 7 derniers jours
       </LineChart>
+
+      <Spacer y={0.5} />
       <LineChart
         labels={["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J-0"]}
         dataset={{
@@ -91,6 +101,10 @@ const ApplicationDashboard = ({
       >
         Nombre de visite des 7 derniers jours
       </LineChart>
+      <Spacer y={1} />
+      <Text h2>Test Tables</Text>
+
+      <AverageTimeSpentTable data={tablesData?.averageTime ?? []} />
     </div>
   );
 };
