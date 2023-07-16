@@ -14,7 +14,14 @@ export default function Home() {
         <Row>
           <Col>
             <Spacer y={5} />
-            <Text h1>Bienvenu sur SuperProjetAnalytics</Text>
+            <Text
+              h1
+              css={{
+                textGradient: "45deg, $yellow600 -20%, $red600 100%",
+              }}
+            >
+              Bienvenu sur SuperProjetAnalytics
+            </Text>
             <Spacer y={2} />
             <Text h2>
               Inscrit toi et connecte ton super site pour avoir des statistiques{" "}
