@@ -4,6 +4,7 @@ import { db } from "@/firebase";
 import {
   DoughnutStat,
   LineStat,
+  TableStat,
   WatchedStat,
   Widget,
   WidgetType,
@@ -271,11 +272,50 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
     }
   };
 
+  const [tableStat, setTableStat] = React.useState<TableStat>(
+    TableStat.AVERAGE_TIME_SPENT
+  );
   const renderTableOptions = () => (
     <>
       <Text h4>Paramètrer la table de données</Text>
+      <Text>Statistique à surveiller</Text>
+      <Select
+        defaultValue={TableStat.AVERAGE_TIME_SPENT}
+        style={{ width: "100%" }}
+        onChange={(value) => setTableStat(value as TableStat)}
+        dropdownStyle={{ zIndex: 9999 }}
+        value={tableStat}
+        options={[
+          {
+            label: "Temps moyen passé par pages",
+            value: TableStat.AVERAGE_TIME_SPENT,
+          },
+          {
+            label: "Clics sur les boutons",
+            value: TableStat.UNIQUE_BUTTON_CLICKS,
+          },
+        ]}
+      />
     </>
   );
+  const handleAddTableWidget = () => {
+    if (!tableStat) {
+      toast.error("Veuillez remplir tous les champs");
+    } else {
+      db.widgets
+        .create({
+          id: uuidv4(),
+          type: WidgetType.TABLE,
+          appId,
+          tableStat: tableStat as TableStat,
+          position: widgetLength ? widgetLength : 0,
+        })
+        .then(() => {
+          handleCloseModal();
+          onValidate();
+        });
+    }
+  };
 
   const handleCloseModal = () => {
     setWidgetType(WidgetType.DOUGHNUT);
@@ -298,6 +338,9 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
     // Clean DOUGHNUT options
     setDoughnutName("");
     setDoughnutStat(DoughnutStat.AVERAGE_TIME_SPENT);
+
+    // Clean TABLE options
+    setTableStat(TableStat.AVERAGE_TIME_SPENT);
   };
 
   return (
@@ -348,7 +391,9 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
               ? handleAddLineWidget()
               : widgetType === WidgetType.DOUGHNUT
               ? handleAddDoughnutWidget()
-              : () => console.log("IMPLEMENT ME")
+              : widgetType === WidgetType.TABLE
+              ? handleAddTableWidget()
+              : () => toast.error("Veuillez choisir un type de widget")
           }
         >
           Ajouter
