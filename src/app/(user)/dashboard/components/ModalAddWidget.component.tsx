@@ -1,8 +1,9 @@
 "use client";
 
 import { db } from "@/firebase";
-import { Widget, WidgetType } from "@/types/widget.type";
+import { WatchedStat, Widget, WidgetType } from "@/types/widget.type";
 import { Modal, Button, Spacer, Text, Radio, Input } from "@nextui-org/react";
+import { Select } from "antd";
 import * as React from "react";
 import { toast } from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
@@ -23,12 +24,6 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
   widgetLength,
 }) => {
   const [widgetType, setWidgetType] = React.useState(WidgetType.DOUGHNUT);
-
-  const renderDoughnutOptions = () => (
-    <>
-      <Text h4>Paramètrer le graphique doughnut</Text>
-    </>
-  );
 
   const [pageHeatmap, setPageHeatmap] = React.useState<string>("");
   const [imageHeatmap, setImageHeatmap] = React.useState<string>("");
@@ -73,6 +68,81 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
     }
   };
 
+  const [kpiText, setKpiText] = React.useState<string>("");
+  const [kpiUnit, setKpiUnit] = React.useState<string>("");
+  const [kpiWatchedStat, setKpiWatchedStat] = React.useState<string>("");
+  const renderKpiOptions = () => (
+    <>
+      <Text h4>Paramètrer la carte de statistiques</Text>
+      <Input
+        label="Texte du KPI"
+        placeholder="Nombre de visites"
+        fullWidth
+        value={kpiText}
+        onChange={(e) => setKpiText(e.target.value)}
+        size="lg"
+      />
+      <Input
+        label="Unité du KPI"
+        placeholder="visites"
+        fullWidth
+        value={kpiUnit}
+        onChange={(e) => setKpiUnit(e.target.value)}
+        size="lg"
+      />
+      <Text>Statistique à surveiller</Text>
+      <Select
+        defaultValue={WatchedStat.BUTTON_CLICKS}
+        style={{ width: "100%" }}
+        onChange={(value) => setKpiWatchedStat(value)}
+        dropdownStyle={{ zIndex: 9999 }}
+        value={kpiWatchedStat}
+        options={[
+          { label: "Clics de boutons", value: WatchedStat.BUTTON_CLICKS },
+          { label: "Clics de souris", value: WatchedStat.MOUSE_CLICKS },
+          { label: "Changement de routes", value: WatchedStat.ROUTE_CHANGE },
+          { label: "Fermeture d'app", value: WatchedStat.APP_CLOSE },
+          { label: "Visiteurs uniques", value: WatchedStat.UNIQUE_VISITORS },
+          { label: "Taux de rebond", value: WatchedStat.DEBOUNCE_RATE },
+          {
+            label: "Moyenne de page visitées",
+            value: WatchedStat.AVERAGE_PAGE_VISITS,
+          },
+          {
+            label: "Temps moyen de session",
+            value: WatchedStat.AVERAGE_SESSION_DURATION,
+          },
+        ]}
+      />
+    </>
+  );
+  const handleAddKpiWidget = () => {
+    if (!kpiText || !kpiWatchedStat) {
+      toast.error("Veuillez remplir tous les champs");
+    } else {
+      db.widgets
+        .create({
+          id: uuidv4(),
+          type: WidgetType.KPI,
+          appId,
+          text: kpiText,
+          unit: kpiUnit,
+          watchedStat: kpiWatchedStat as WatchedStat,
+          position: widgetLength ? widgetLength : 0,
+        })
+        .then(() => {
+          handleCloseModal();
+          onValidate();
+        });
+    }
+  };
+
+  const renderDoughnutOptions = () => (
+    <>
+      <Text h4>Paramètrer le graphique doughnut</Text>
+    </>
+  );
+
   const renderLineOptions = () => (
     <>
       <Text h4>Paramètrer le graphique en ligne</Text>
@@ -114,15 +184,17 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
           onChange={(value: string) => setWidgetType(value as WidgetType)}
         >
           <Radio value={WidgetType.DOUGHNUT}>Graphique doughnut</Radio>
-          <Radio value={WidgetType.HEATMAP}>Heatmap</Radio>
           <Radio value={WidgetType.LINE}>Graphique en ligne</Radio>
+          <Radio value={WidgetType.HEATMAP}>Heatmap</Radio>
           <Radio value={WidgetType.TABLE}>Table de données</Radio>
+          <Radio value={WidgetType.KPI}>Carte de statistiques</Radio>
         </Radio.Group>
         <Spacer y={0.5} />
         {widgetType === WidgetType.HEATMAP && renderHeatmapOptions()}
         {widgetType === WidgetType.DOUGHNUT && renderDoughnutOptions()}
         {widgetType === WidgetType.LINE && renderLineOptions()}
         {widgetType === WidgetType.TABLE && renderTableOptions()}
+        {widgetType === WidgetType.KPI && renderKpiOptions()}
       </Modal.Body>
       <Modal.Footer>
         <Button auto flat color="error" onPress={() => handleCloseModal()}>
@@ -134,6 +206,8 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
           onPress={() =>
             widgetType === WidgetType.HEATMAP
               ? handleAddHeatmapWidget()
+              : widgetType === WidgetType.KPI
+              ? handleAddKpiWidget()
               : () => console.log("IMPLEMENT ME")
           }
         >
