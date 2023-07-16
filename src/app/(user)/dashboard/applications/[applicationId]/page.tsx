@@ -25,11 +25,15 @@ const ApplicationDashboard = ({
       setApplication(app);
     });
 
+    fetchWidgets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchWidgets = () => {
     db.widgets.get(params.applicationId).then((widgets) => {
       setWidgets(widgets);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   useEffect(() => {
     console.log(application);
@@ -75,7 +79,9 @@ const ApplicationDashboard = ({
       <ModalAddWidget
         visible={modalVisible}
         handleClose={() => setModalVisible(false)}
-        onValidate={() => {}}
+        onValidate={() => {
+          fetchWidgets();
+        }}
         appId={params.applicationId}
         widgetLength={widgets?.length}
       />
