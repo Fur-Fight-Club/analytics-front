@@ -153,6 +153,16 @@ const widgets = {
     const widgetsData = widgetsCollectionData.docs.map((doc) => doc.data());
     return widgetsData.filter((w) => w.appId === appId) as Widget[];
   },
+  update: async (appId: string, data: Partial<Widget>) => {
+    try {
+      const docRef = db.doc(db.firestore, "widgets", appId);
+      await updateDoc(docRef, data);
+      console.log("Document updated successfully!");
+    } catch (error) {
+      console.error("Error updating document:", error);
+    }
+  },
+
   create: async (data: Widget) => {
     const uuid = uuidv4();
     try {
