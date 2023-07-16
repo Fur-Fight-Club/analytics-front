@@ -71,11 +71,11 @@ const ApplicationDashboard = ({
     return response;
   }
 
-  const { data: cardsData } = useQuery(["cardsData"], fetchCards, {
-    onSuccess: (data: GetStatCardResponse) => {
-      console.log("cards data:", data);
-    },
-  });
+  const { data: cardsData } = useQuery<GetStatCardResponse>(
+    ["cardsData"],
+    fetchCards,
+    {}
+  );
 
   // QUERY TABLE
   async function fetchTable() {
@@ -83,11 +83,11 @@ const ApplicationDashboard = ({
     return response;
   }
 
-  const { data: tableData } = useQuery(["tablesData"], fetchTable, {
-    onSuccess: (data: GetTablesDataResponse) => {
-      console.log("TABLE data:", data);
-    },
-  });
+  const { data: tableData } = useQuery<GetTablesDataResponse>(
+    ["tablesData"],
+    fetchTable,
+    {}
+  );
 
   // QUERY CHART
   async function fetchChart() {
@@ -95,33 +95,13 @@ const ApplicationDashboard = ({
     return response;
   }
 
-  const { data: chartData } = useQuery(["chartsData"], fetchChart, {
-    onSuccess: (data: GetChartsDataResponse) => {
-      console.log("CHART data:", data);
-    },
-  });
-
-  // const buttonClickQuery = useQuery("buttonClickData", () =>
-  //   fetchData("button-click")
-  // );
-
-  // const pathnameChangeQuery = useQuery("pathnameChangeData", () =>
-  //   fetchData("pathname-change")
-  // );
-
-  // const leaveAppQuery = useQuery("leaveAppData", () => fetchData("leave-app"));
-
-  // const demographicQuery = useQuery("demographicData", () =>
-  //   fetchData("demographic-data")
-  // );
-
-  // const tablesQuery = useQuery("tablesData", () => fetchData("tables-data"));
-
-  // const chartQuery = useQuery("chartsData", () => fetchData("charts-data"));
+  const { data: chartData } = useQuery<GetChartsDataResponse>(
+    ["chartsData"],
+    fetchChart,
+    {}
+  );
 
   const getHeatmapData = async () => {};
-
-  // TODO : update Model used in state below
 
   const [chartsData, setChartsData] = useState<{}>();
   const [isFetchingChartsData, setIsFetchingChartsData] = useState(false);
@@ -159,9 +139,6 @@ const ApplicationDashboard = ({
       setWidgets(widgets);
     });
   };
-  useEffect(() => {
-    console.log({ widgets });
-  }, [widgets]);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -283,40 +260,46 @@ const ApplicationDashboard = ({
               </Grid>
             );
           } else if (w.type === WidgetType.HEATMAP) {
-            // return (
-            //   <Grid
-            //     xs={12}
-            //     md={6}
-            //     css={{
-            //       height: "50vh",
-            //     }}
-            //   >
-            //     <Card
-            //       css={{
-            //         display: "flex",
-            //         justifyContent: "center",
-            //         alignItems: "center",
-            //       }}
-            //     >
-            //       <Card.Body
-            //         css={{
-            //           overflow: "hidden",
-            //         }}
-            //       >
-            //         <Grid.Container gap={2}>
-            //           <Grid xs={12}>
-            //             <Text h4>Heatmap des clics</Text>
-            //           </Grid>
-            //         </Grid.Container>
-            //         <HeatmapNoSSR
-            //           route={w.page}
-            //           refresh={0}
-            //           heatmapImage={w.pagePicture}
-            //         />
-            //       </Card.Body>
-            //     </Card>
-            //   </Grid>
-            // );
+            return (
+              <Grid
+                xs={12}
+                md={6}
+                css={{
+                  height: "50vh",
+                }}
+              >
+                <Card
+                  css={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Card.Body
+                    css={{
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Grid.Container gap={2}>
+                      <Grid xs={12}>
+                        <Text h4>Heatmap {w.page}</Text>
+                      </Grid>
+                    </Grid.Container>
+                    <HeatmapNoSSR
+                      route={w.page}
+                      refresh={0}
+                      heatmapImage={w.pagePicture}
+                      headers={{
+                        "Content-Type": "application/json",
+                        "x-client-id": clientId,
+                        "x-client-secret": clientSecret,
+                        "x-app-id": params.applicationId,
+                      }}
+                    />
+                  </Card.Body>
+                </Card>
+              </Grid>
+            );
           } else if (w.type === WidgetType.TABLE) {
             return (
               <Grid
@@ -370,65 +353,6 @@ const ApplicationDashboard = ({
           }
         })}
       </Grid.Container>
-
-      {/* <Text h2>Test doughtnutChart</Text>
-
-      <Spacer y={0.5} />
-
-      {/* TODO : Update with real data from firestore 
-      <DoughnutChart
-        labels={chartsData?.averages.timeSpent.labels ?? []}
-        dataset={{
-          label: "Temps passé en moyenne (en ms)",
-          data: chartsData?.averages.timeSpent.data ?? [],
-        }}
-        loading={isFetchingChartsData}
-      >
-        Temps passé en moyenne sur une page
-      </DoughnutChart>
-
-      <Spacer y={1} />
-
-      <Text h2>Test lineChart</Text>
-
-      <Spacer y={0.5} />
-
-      {/* TODO : Update with real data from firestore 
-      <LineChart
-        labels={["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J-0"]}
-        dataset={{
-          label: "Nombre de visites",
-          data: (chartsData?.lastVisitors ?? []).map((v) => v.count),
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-        }}
-        loading={isFetchingChartsData}
-      >
-        Nombre de visite des 7 derniers jours
-      </LineChart>
-
-      <Spacer y={1} />
-
-      <Text h2>Test Tables</Text>
-
-      <Spacer y={0.5} />
-
-      <AverageTimeSpentTable data={tablesData?.averageTime ?? []} />
-
-      <Spacer y={0.5} />
-
-      <ClickEventTable data={tablesData?.click ?? []} />
-
-      <Spacer y={1} />
-
-      <Text h2>Test KPI Card</Text>
-
-      <Spacer y={0.5} />
-
-      <KpiAdminCard
-        label="Clics boutons"
-        amount={statsCardsData?.button ?? 0}
-      /> */}
     </div>
   );
 };

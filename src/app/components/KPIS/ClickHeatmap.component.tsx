@@ -18,6 +18,7 @@ interface ClickHeatmapProps {
   refresh: number;
   count?: number;
   heatmapImage: string;
+  headers: object;
 }
 
 export const ClickHeatmap: React.FunctionComponent<ClickHeatmapProps> = ({
@@ -25,6 +26,7 @@ export const ClickHeatmap: React.FunctionComponent<ClickHeatmapProps> = ({
   refresh,
   count,
   heatmapImage,
+  headers,
 }) => {
   // TODO replace token here by the real user's token
   const token = "EXAMPLE_TOKEN";
@@ -44,13 +46,11 @@ export const ClickHeatmap: React.FunctionComponent<ClickHeatmapProps> = ({
   useEffect(() => {
     (async () => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_ENDPOINT}/analytics-events/heatmap-data`,
+        `http://localhost:4001/events/heatmap-data`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}` ?? "",
-          },
+          // @ts-ignore
+          headers,
           body: JSON.stringify({ route, count }),
         }
       );
