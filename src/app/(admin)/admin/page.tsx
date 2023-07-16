@@ -3,7 +3,9 @@
 import { db } from "@/firebase";
 import { User as UserModel } from "@/types/user.type";
 import { Badge, Button, Row, Table, Text } from "@nextui-org/react";
+import crypto from "crypto";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function AdminMainPage() {
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -13,15 +15,18 @@ export default function AdminMainPage() {
       const usersData = await db.user.getAll();
       // @ts-ignore
       setUsers(usersData);
-
-      console.log(usersData);
     })();
   }, []);
 
   const handleValidateUser = async (userUid: UserModel["uid"]) => {
+    var clientSecret = crypto.randomBytes(64).toString("hex");
+    var clientId = uuidv4();
+
     (async () => {
       await db.user.update(userUid, {
         isVerified: true,
+        clientId,
+        clientSecret,
       });
     })();
 
