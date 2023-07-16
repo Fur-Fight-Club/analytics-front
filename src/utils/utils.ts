@@ -11,3 +11,16 @@ export const checkIfUserIsAdmin = (user: User) => {
 export const getInitials = (firstName: string, lastName: string) => {
   return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
 };
+
+// Function that generate x random rgba colors at 1 and .2 opacity
+export const generateRandomColors = (x: number) => {
+  const colors = [];
+  for (let i = 0; i < x; i++) {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+
+    colors.push([`rgba(${r},${g},${b},1)`, `rgba(${r},${g},${b},.2)`]);
+  }
+  return colors;
+};
