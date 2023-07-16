@@ -11,7 +11,7 @@ export interface User {
   clientSecret?: string;
 }
 
-export type UserDb = Omit<User, "uid" | "email">;
+export type UserDb = Omit<User, "email">;
 
 export const initialUser: User = {
   uid: "",

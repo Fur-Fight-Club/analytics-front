@@ -33,6 +33,7 @@ const user = {
     const userDocData = await db.getDoc(userDoc);
     const userData = userDocData.data();
     return {
+      uid: userDocData.id,
       isVerified: userData!.isVerified,
       companyName: userData!.companyName,
       kbis: userData!.kbis,

@@ -30,6 +30,18 @@ export default function AdminMainPage() {
     setUsers(usersData);
   };
 
+  const handleRefuseUser = async (userUid: UserModel["uid"]) => {
+    (async () => {
+      await db.user.update(userUid, {
+        isVerified: false,
+      });
+    })();
+
+    const usersData = await db.user.getAll();
+    // @ts-ignore
+    setUsers(usersData);
+  };
+
   const columns = [
     { name: "ENTREPRISE", uid: "company" },
     { name: "ROLE", uid: "role" },
@@ -76,6 +88,7 @@ export default function AdminMainPage() {
         >
           <Table.Header>
             <Table.Column>ENTREPRISE</Table.Column>
+            <Table.Column>WWW</Table.Column>
             <Table.Column>KBIS</Table.Column>
             <Table.Column>ROLE</Table.Column>
             <Table.Column>STATUS</Table.Column>
@@ -85,6 +98,7 @@ export default function AdminMainPage() {
             {users.map((user) => (
               <Table.Row key={user.uid}>
                 <Table.Cell>{user.companyName}</Table.Cell>
+                <Table.Cell>{user.websiteURL}</Table.Cell>
                 <Table.Cell>{user.kbis}</Table.Cell>
                 <Table.Cell>{user.role}</Table.Cell>
                 <Table.Cell>
@@ -106,11 +120,18 @@ export default function AdminMainPage() {
                       >
                         Valider le compte
                       </Button>
-                      <Button auto color="error" rounded flat>
-                        Refuser le compte
-                      </Button>
                     </Row>
-                  ) : null}
+                  ) : (
+                    <Button
+                      auto
+                      color="error"
+                      rounded
+                      flat
+                      onPress={() => handleRefuseUser(user.uid)}
+                    >
+                      Repasser en attente
+                    </Button>
+                  )}
                 </Table.Cell>
               </Table.Row>
             ))}
