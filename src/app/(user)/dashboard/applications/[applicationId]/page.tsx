@@ -79,6 +79,18 @@ const ApplicationDashboard = ({
       >
         Nombre de visite des 7 derniers jours
       </LineChart>
+      <LineChart
+        labels={["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J-0"]}
+        dataset={{
+          label: "Nombre de visites",
+          data: (chartsData?.lastVisitors ?? []).map((v) => v.count),
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        }}
+        loading={true}
+      >
+        Nombre de visite des 7 derniers jours
+      </LineChart>
     </div>
   );
 };
