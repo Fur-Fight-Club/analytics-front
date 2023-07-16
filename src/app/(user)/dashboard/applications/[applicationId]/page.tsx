@@ -9,13 +9,25 @@ import { db } from "@/firebase";
 import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { Application } from "@/types/application.type";
 import { User, initialUser } from "@/types/user.type";
-import { Widget } from "@/types/widget.type";
-import { Button, Grid, Spacer, Text } from "@nextui-org/react";
+import { Loading } from "@nextui-org/react";
+
+import {
+  TableStat,
+  WatchedStat,
+  Widget,
+  WidgetType,
+} from "@/types/widget.type";
+import { Button, Card, Grid, Spacer, Text } from "@nextui-org/react";
 import dynamic from "next/dynamic";
 import { Layout } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { ModalAddWidget } from "../../components/ModalAddWidget.component";
+import {
+  GetChartsDataResponse,
+  GetStatCardResponse,
+  GetTablesDataResponse,
+} from "@/types/analytics.type";
 
 type ApplicationDashboard = {};
 
@@ -27,10 +39,11 @@ const ApplicationDashboard = ({
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
   const [application, setApplication] = useState<Application>();
   const [widgets, setWidgets] = useState<Widget[]>();
+  const queryClient = useQueryClient();
 
-  const appId = "TODO"; // TODO fill this with the real appId
-  const clientId = "TODO"; // TODO fill this with the real clientId
-  const clientSecret = "TODO"; // TODO fill this with the real clientSecret
+  const appId = params.applicationId; // TODO fill this with the real appId
+  const clientId = user.clientId; // TODO fill this with the real clientId
+  const clientSecret = user.clientSecret; // TODO fill this with the real clientSecret
 
   const headers = {
     "x-app-id": appId,
@@ -41,6 +54,7 @@ const ApplicationDashboard = ({
   const fetchData = (endpoint: string) => {
     return fetch(`http://localhost:4001/events/${endpoint}`, {
       method: "GET",
+      // @ts-ignore
       headers: headers,
     }).then((response) => {
       if (!response.ok) {
@@ -50,33 +64,61 @@ const ApplicationDashboard = ({
     });
   };
 
-  const mouseClickQuery = useQuery("mouseClickData", () =>
-    fetchData("mouse-click")
-  );
+  // QUERY CARDS
+  async function fetchCards() {
+    const response = await fetchData("cards-data");
+    return response;
+  }
 
-  const buttonClickQuery = useQuery("buttonClickData", () =>
-    fetchData("button-click")
-  );
+  const { data: cardsData } = useQuery(["cardsData"], fetchCards, {
+    onSuccess: (data: GetStatCardResponse) => {
+      console.log("cards data:", data);
+    },
+  });
 
-  const pathnameChangeQuery = useQuery("pathnameChangeData", () =>
-    fetchData("pathname-change")
-  );
+  // QUERY TABLE
+  async function fetchTable() {
+    const response = await fetchData("tables-data");
+    return response;
+  }
 
-  const leaveAppQuery = useQuery("leaveAppData", () => fetchData("leave-app"));
+  const { data: tableData } = useQuery(["tablesData"], fetchTable, {
+    onSuccess: (data: GetTablesDataResponse) => {
+      console.log("TABLE data:", data);
+    },
+  });
 
-  const demographicQuery = useQuery("demographicData", () =>
-    fetchData("demographic-data")
-  );
+  // QUERY CHART
+  async function fetchChart() {
+    const response = await fetchData("charts-data");
+    return response;
+  }
 
-  const cardsQuery = useQuery("cardsData", () => fetchData("cards-data"));
+  const { data: chartData } = useQuery(["chartsData"], fetchChart, {
+    onSuccess: (data: GetChartsDataResponse) => {
+      console.log("CHART data:", data);
+    },
+  });
 
-  const tablesQuery = useQuery("tablesData", () => fetchData("tables-data"));
+  // const buttonClickQuery = useQuery("buttonClickData", () =>
+  //   fetchData("button-click")
+  // );
 
-  const chartQuery = useQuery("chartsData", () => fetchData("charts-data"));
+  // const pathnameChangeQuery = useQuery("pathnameChangeData", () =>
+  //   fetchData("pathname-change")
+  // );
+
+  // const leaveAppQuery = useQuery("leaveAppData", () => fetchData("leave-app"));
+
+  // const demographicQuery = useQuery("demographicData", () =>
+  //   fetchData("demographic-data")
+  // );
+
+  // const tablesQuery = useQuery("tablesData", () => fetchData("tables-data"));
+
+  // const chartQuery = useQuery("chartsData", () => fetchData("charts-data"));
 
   const getHeatmapData = async () => {};
-
-  const queryClient = useQueryClient();
 
   // TODO : update Model used in state below
 
@@ -92,7 +134,7 @@ const ApplicationDashboard = ({
 
   const HeatmapNoSSR = dynamic(
     () =>
-      import("/src/app/components/KPIS/ClickHeatmap.component").then(
+      import("../../../../components/KPIS/ClickHeatmap.component").then(
         (mod) => mod.ClickHeatmap
       ),
     {
@@ -116,10 +158,6 @@ const ApplicationDashboard = ({
       setWidgets(widgets);
     });
   };
-
-  useEffect(() => {
-    console.log(application);
-  }, [application]);
   useEffect(() => {
     console.log({ widgets });
   }, [widgets]);
@@ -168,12 +206,127 @@ const ApplicationDashboard = ({
         widgetLength={widgets?.length}
       />
       <Spacer y={1} />
+      <Grid.Container gap={2}>
+        {widgets?.map((w: Widget, key) => {
+          if (w.type === WidgetType.DOUGHNUT) {
+            return;
+          } else if (w.type === WidgetType.LINE) {
+            return (
+              <Grid
+                xs={12}
+                md={6}
+                css={{
+                  height: "50vh",
+                }}
+              >
+                <LineChart
+                  labels={["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J-0"]}
+                  dataset={{
+                    label: w.chartName,
+                    data: (chartData?.lastVisitors ?? []).map((v) => v.count),
+                    borderColor: "rgb(255, 99, 132)",
+                    backgroundColor: "rgba(255, 99, 132, 0.5)",
+                  }}
+                  loading={false}
+                >
+                  {w.chartName}
+                </LineChart>
+              </Grid>
+            );
+          } else if (w.type === WidgetType.HEATMAP) {
+            // return (
+            //   <Grid
+            //     xs={12}
+            //     md={6}
+            //     css={{
+            //       height: "50vh",
+            //     }}
+            //   >
+            //     <Card
+            //       css={{
+            //         display: "flex",
+            //         justifyContent: "center",
+            //         alignItems: "center",
+            //       }}
+            //     >
+            //       <Card.Body
+            //         css={{
+            //           overflow: "hidden",
+            //         }}
+            //       >
+            //         <Grid.Container gap={2}>
+            //           <Grid xs={12}>
+            //             <Text h4>Heatmap des clics</Text>
+            //           </Grid>
+            //         </Grid.Container>
+            //         <HeatmapNoSSR
+            //           route={w.page}
+            //           refresh={0}
+            //           heatmapImage={w.pagePicture}
+            //         />
+            //       </Card.Body>
+            //     </Card>
+            //   </Grid>
+            // );
+          } else if (w.type === WidgetType.TABLE) {
+            return (
+              <Grid
+                xs={12}
+                md={6}
+                css={{
+                  height: "50vh",
+                  width: "100%",
+                }}
+              >
+                {w.tableStat === TableStat.AVERAGE_TIME_SPENT && (
+                  <AverageTimeSpentTable
+                    data={tableData?.averageTime ?? []}
+                    key={w.id}
+                  />
+                )}
+                {w.tableStat === TableStat.UNIQUE_BUTTON_CLICKS && (
+                  <ClickEventTable data={tableData?.click ?? []} key={w.id} />
+                )}
+              </Grid>
+            );
+          } else if (w.type === WidgetType.KPI) {
+            return (
+              <Grid xs={12} md={3}>
+                <KpiAdminCard
+                  label={w.text}
+                  amount={
+                    w.watchedStat === WatchedStat.APP_CLOSE
+                      ? cardsData?.closeApp
+                      : w.watchedStat === WatchedStat.AVERAGE_PAGE_VISITS
+                      ? cardsData?.averagePageVisited
+                      : w.watchedStat === WatchedStat.AVERAGE_SESSION_DURATION
+                      ? cardsData?.averageTimeSpent
+                      : w.watchedStat === WatchedStat.BUTTON_CLICKS
+                      ? cardsData?.button
+                      : w.watchedStat === WatchedStat.DEBOUNCE_RATE
+                      ? cardsData?.debounce
+                      : w.watchedStat === WatchedStat.MOUSE_CLICKS
+                      ? cardsData?.mouse
+                      : w.watchedStat === WatchedStat.ROUTE_CHANGE
+                      ? cardsData?.pathname
+                      : w.watchedStat === WatchedStat.UNIQUE_VISITORS
+                      ? cardsData?.uniqueVisitor
+                      : 0
+                  }
+                />
+              </Grid>
+            );
+          } else {
+            return <div></div>;
+          }
+        })}
+      </Grid.Container>
 
-      <Text h2>Test doughtnutChart</Text>
+      {/* <Text h2>Test doughtnutChart</Text>
 
       <Spacer y={0.5} />
 
-      {/* TODO : Update with real data from firestore */}
+      {/* TODO : Update with real data from firestore 
       <DoughnutChart
         labels={chartsData?.averages.timeSpent.labels ?? []}
         dataset={{
@@ -191,7 +344,7 @@ const ApplicationDashboard = ({
 
       <Spacer y={0.5} />
 
-      {/* TODO : Update with real data from firestore */}
+      {/* TODO : Update with real data from firestore 
       <LineChart
         labels={["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J-0"]}
         dataset={{
@@ -226,7 +379,7 @@ const ApplicationDashboard = ({
       <KpiAdminCard
         label="Clics boutons"
         amount={statsCardsData?.button ?? 0}
-      />
+      /> */}
     </div>
   );
 };

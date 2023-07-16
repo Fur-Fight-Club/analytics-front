@@ -26,10 +26,6 @@ const NavbarFFC = () => {
   useEffect(() => {
     setIsUserLogged(checkIfUserIsLoggedIn(user));
     setIsUserisAdmin(checkIfUserIsAdmin(user));
-
-    console.log("user", user);
-
-    console.log(isUserLogged, isUserisAdmin);
   }, [user]);
 
   const isInUrl = (path: string) => {

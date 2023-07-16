@@ -33,7 +33,7 @@ export const ClickEventTable: React.FunctionComponent<ClickEventTableProps> = ({
           </Table.Column>
         </Table.Header>
         <Table.Body>
-          {data.map((ubc, index) => (
+          {data?.map((ubc, index) => (
             <Table.Row key={index}>
               <Table.Cell>
                 <Badge color="primary">{ubc.event}</Badge>

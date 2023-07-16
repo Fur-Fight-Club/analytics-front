@@ -23,7 +23,7 @@ export default function RegisterPage() {
         .then(async (userCredential) => {
           // Signed in
           toast.success("Vous êtes connecté");
-          console.log(userCredential);
+
           const userDoc = await db.doc(
             db.firestore,
             "users",
@@ -31,7 +31,7 @@ export default function RegisterPage() {
           );
           const userDocData = await db.getDoc(userDoc);
           const userData = userDocData.data();
-          console.log(userData);
+
           setUser({
             uid: userCredential.user.uid,
             email,

@@ -19,7 +19,6 @@ import { useEffect } from "react";
 export default function DashboardPage() {
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
   var token = crypto.randomBytes(48).toString("hex");
-  console.log(token);
 
   //get User
   useEffect(() => {

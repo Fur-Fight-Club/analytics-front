@@ -52,7 +52,7 @@ export default function RegisterPage() {
             .then(() => {
               toast.success("Votre compte a été créé avec succès");
             });
-          console.log(user);
+
           router.push("/login");
         })
         .catch((error) => {

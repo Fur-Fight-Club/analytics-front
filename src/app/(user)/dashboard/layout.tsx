@@ -12,7 +12,7 @@ type DashboardLayoutProps = {
   children: React.ReactNode;
 };
 
-export default function AdminLayout({ children }: DashboardLayoutProps) {
+export default function dashboardLayout({ children }: DashboardLayoutProps) {
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
   const router = useRouter();
 
