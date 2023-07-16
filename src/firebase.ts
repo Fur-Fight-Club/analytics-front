@@ -14,6 +14,8 @@ import {
 import { toast } from "react-hot-toast";
 import { Application } from "./types/application.type";
 import { User, UserDb } from "./types/user.type";
+import { Widget } from "./types/widget.type";
+import { v4 as uuidv4 } from "uuid";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCZ1viKnJtYQfHEYAUHZTLCdnulMu-bfsI",
@@ -144,6 +146,40 @@ const application = {
   },
 };
 
+const widgets = {
+  get: async (appId: string): Promise<Widget[]> => {
+    const widgetsCollection = await db.collection(db.firestore, "widgets");
+    const widgetsCollectionData = await db.getDocs(widgetsCollection);
+    const widgetsData = widgetsCollectionData.docs.map((doc) => doc.data());
+    return widgetsData.filter((w) => w.clientId === appId) as Widget[];
+  },
+  create: async (data: Widget) => {
+    const uuid = uuidv4();
+    try {
+      const docRef = await db.setDoc(
+        db.doc(db.firestore, "widgets", uuid),
+        data
+      );
+      toast.success(`Le widget a bien été créé !`);
+      console.log("Document written with ID: ", docRef);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      toast.error(`Une erreur est survenue lors de la création du widget !`);
+    }
+  },
+  delete: async (appId: string) => {
+    try {
+      const docRef = await db.doc(db.firestore, "widgets", appId);
+      await db.deleteDoc(docRef);
+      toast.success(`Le widget a bien été supprimée !`);
+      console.log("Document deleted with ID: ", appId);
+    } catch (e) {
+      console.error("Error deleting document: ", e);
+      toast.error(`Une erreur est survenue lors de la suppression du widget !`);
+    }
+  },
+};
+
 export const auth = getAuth(app);
 export const db = {
   firestore: getFirestore(app),
@@ -157,5 +193,6 @@ export const db = {
   deleteDoc,
   user,
   application,
+  widgets,
 };
 export default app;
