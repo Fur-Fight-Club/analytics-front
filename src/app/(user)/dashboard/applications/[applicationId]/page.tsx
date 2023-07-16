@@ -1,4 +1,5 @@
 "use client";
+
 import { DoughnutChart } from "@/app/components/KPIS/Chart/DoughnutChart.component";
 import { LineChart } from "@/app/components/KPIS/Chart/LineChart.component";
 import { AverageTimeSpentTable } from "@/app/components/KPIS/Table/AverageTimeSpentTable.component";

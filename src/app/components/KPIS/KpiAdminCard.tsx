@@ -24,6 +24,7 @@ export const KpiAdminCard = ({
     const animation = animate(count, amount, { duration: 3.5 });
 
     return animation.stop;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
   return (
