@@ -35,8 +35,14 @@ export interface KpiWidget extends BaseWidget {
   unit: string;
 }
 
+export enum LineStat {
+  VISITS = "VISITS",
+}
 export interface LineWidget extends BaseWidget {
   type: WidgetType.LINE;
+  lineStat: LineStat;
+  chartName: string;
+  days: number;
 }
 
 export interface DoughnutWidget extends BaseWidget {
