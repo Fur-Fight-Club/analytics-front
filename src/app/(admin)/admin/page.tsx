@@ -5,6 +5,7 @@ import { User as UserModel } from "@/types/user.type";
 import { Badge, Button, Row, Table, Text } from "@nextui-org/react";
 import crypto from "crypto";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 
 export default function AdminMainPage() {
@@ -21,7 +22,6 @@ export default function AdminMainPage() {
   const handleValidateUser = async (userUid: UserModel["uid"]) => {
     var clientSecret = crypto.randomBytes(64).toString("hex");
     var clientId = uuidv4();
-
     (async () => {
       await db.user.update(userUid, {
         isVerified: true,
@@ -29,10 +29,11 @@ export default function AdminMainPage() {
         clientSecret,
       });
     })();
-
     const usersData = await db.user.getAll();
     // @ts-ignore
     setUsers(usersData);
+    toast.success("L'utilisateur à bien été validé !");
+    toast.success("Un ClientID 📦 et un Secret 🔐 viens d'être créer !");
   };
 
   const handleRefuseUser = async (userUid: UserModel["uid"]) => {
@@ -41,10 +42,10 @@ export default function AdminMainPage() {
         isVerified: false,
       });
     })();
-
     const usersData = await db.user.getAll();
     // @ts-ignore
     setUsers(usersData);
+    toast.success("L'utilisateur à bien été remis en attente !");
   };
 
   const columns = [
@@ -107,14 +108,16 @@ export default function AdminMainPage() {
                 <Table.Cell>{user.kbis}</Table.Cell>
                 <Table.Cell>{user.role}</Table.Cell>
                 <Table.Cell>
-                  <Badge
-                    color={user?.isVerified === true ? "success" : "error"}
-                  >
-                    {user?.isVerified === true ? "Activer" : "Pas activer"}
-                  </Badge>
+                  {user.role.includes("USER") && (
+                    <Badge
+                      color={user?.isVerified === true ? "success" : "error"}
+                    >
+                      {user?.isVerified === true ? "Activer" : "Pas activer"}
+                    </Badge>
+                  )}
                 </Table.Cell>
                 <Table.Cell>
-                  {!user?.isVerified ? (
+                  {!user?.isVerified && user.role.includes("USER") && (
                     <Row>
                       <Button
                         auto
@@ -126,16 +129,20 @@ export default function AdminMainPage() {
                         Valider le compte
                       </Button>
                     </Row>
-                  ) : (
-                    <Button
-                      auto
-                      color="error"
-                      rounded
-                      flat
-                      onPress={() => handleRefuseUser(user.uid)}
-                    >
-                      Repasser en attente
-                    </Button>
+                  )}
+
+                  {user?.isVerified && user.role.includes("USER") && (
+                    <Row>
+                      <Button
+                        auto
+                        color="error"
+                        rounded
+                        flat
+                        onPress={() => handleRefuseUser(user.uid)}
+                      >
+                        Repasser en attente
+                      </Button>
+                    </Row>
                   )}
                 </Table.Cell>
               </Table.Row>
