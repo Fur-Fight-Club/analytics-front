@@ -54,7 +54,9 @@ const ApplicationDashboard = ({
         Application ID : <Text i>{application?.applicationId}</Text>
       </Text>
       <Spacer y={1} />
+
       <Text h2>Test doughtnutChart</Text>
+
       <Spacer y={0.5} />
 
       {/* TODO : Update with real data from firestore */}
@@ -70,7 +72,10 @@ const ApplicationDashboard = ({
       </DoughnutChart>
 
       <Spacer y={1} />
+
       <Text h2>Test lineChart</Text>
+
+      <Spacer y={0.5} />
 
       {/* TODO : Update with real data from firestore */}
       <LineChart
@@ -86,22 +91,11 @@ const ApplicationDashboard = ({
         Nombre de visite des 7 derniers jours
       </LineChart>
 
-      <Spacer y={0.5} />
-      <LineChart
-        labels={["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J-0"]}
-        dataset={{
-          label: "Nombre de visites",
-          data: (chartsData?.lastVisitors ?? []).map((v) => v.count),
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-        }}
-        loading={true}
-      >
-        Nombre de visite des 7 derniers jours
-      </LineChart>
-
       <Spacer y={1} />
+
       <Text h2>Test Tables</Text>
+
+      <Spacer y={0.5} />
 
       <AverageTimeSpentTable data={tablesData?.averageTime ?? []} />
 
@@ -112,6 +106,8 @@ const ApplicationDashboard = ({
       <Spacer y={1} />
 
       <Text h2>Test KPI Card</Text>
+
+      <Spacer y={0.5} />
 
       <KpiAdminCard
         label="Clics boutons"
