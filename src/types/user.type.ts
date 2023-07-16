@@ -7,7 +7,11 @@ export interface User {
   websiteURL: string;
   isVerified: boolean;
   role: "ADMIN" | "USER" | "null";
+  clientId?: string;
+  clientSecret?: string;
 }
+
+export type UserDb = Omit<User, "uid" | "email">;
 
 export const initialUser: User = {
   uid: "",
