@@ -2,6 +2,7 @@
 import { DoughnutChart } from "@/app/components/KPIS/Chart/DoughnutChart.component";
 import { LineChart } from "@/app/components/KPIS/Chart/LineChart.component";
 import { AverageTimeSpentTable } from "@/app/components/KPIS/Table/AverageTimeSpentTable.component";
+import { ClickEventTable } from "@/app/components/KPIS/Table/ClickEventTable.component";
 import { db } from "@/firebase";
 import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { Application } from "@/types/application.type";
@@ -18,6 +19,8 @@ const ApplicationDashboard = ({
 }) => {
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
   const [application, setApplication] = useState<Application>();
+
+  // TODO : update Model used in state below
 
   const [chartsData, setChartsData] = useState<{}>();
   const [isFetchingChartsData, setIsFetchingChartsData] = useState(false);
@@ -105,6 +108,10 @@ const ApplicationDashboard = ({
       <Text h2>Test Tables</Text>
 
       <AverageTimeSpentTable data={tablesData?.averageTime ?? []} />
+
+      <Spacer y={0.5} />
+
+      <ClickEventTable data={tablesData?.click ?? []} />
     </div>
   );
 };
