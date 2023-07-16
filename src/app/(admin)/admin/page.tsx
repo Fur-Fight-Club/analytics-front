@@ -2,10 +2,12 @@
 
 import { db } from "@/firebase";
 import { User as UserModel } from "@/types/user.type";
-import { Badge, Button, Row, Table, Text } from "@nextui-org/react";
 import crypto from "crypto";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+
+import { Badge, Button, Row, Spacer, Table, Text } from "@nextui-org/react";
+import { toast } from "react-hot-toast";
 
 export default function AdminMainPage() {
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -21,7 +23,6 @@ export default function AdminMainPage() {
   const handleValidateUser = async (userUid: UserModel["uid"]) => {
     var clientSecret = crypto.randomBytes(64).toString("hex");
     var clientId = uuidv4();
-
     (async () => {
       await db.user.update(userUid, {
         isVerified: true,
@@ -29,10 +30,11 @@ export default function AdminMainPage() {
         clientSecret,
       });
     })();
-
     const usersData = await db.user.getAll();
     // @ts-ignore
     setUsers(usersData);
+    toast.success("L'utilisateur à bien été validé !");
+    toast.success("Un ClientID 📦 et un Secret 🔐 viens d'être créer !");
   };
 
   const handleRefuseUser = async (userUid: UserModel["uid"]) => {
@@ -41,47 +43,16 @@ export default function AdminMainPage() {
         isVerified: false,
       });
     })();
-
     const usersData = await db.user.getAll();
     // @ts-ignore
     setUsers(usersData);
-  };
-
-  const columns = [
-    { name: "ENTREPRISE", uid: "company" },
-    { name: "ROLE", uid: "role" },
-    { name: "STATUS", uid: "status" },
-    { name: "ACTIONS", uid: "actions" },
-  ];
-
-  const renderCell = (user: UserModel, columnKey: any) => {
-    // @ts-ignore
-    const cellValue = user[columnKey];
-    switch (columnKey) {
-      case "company":
-        return <Text>{user.companyName}</Text>;
-      case "role":
-        return (
-          <Row>
-            <Text b size={14} css={{ tt: "capitalize" }}>
-              {user.role}
-            </Text>
-          </Row>
-        );
-      case "status":
-        return <p>pouet</p>;
-
-      case "actions":
-        return <p>pouet</p>;
-      default:
-        return cellValue;
-    }
+    toast.success("L'utilisateur à bien été remis en attente !");
   };
 
   return (
     <>
       <Text h2>ADMIN DASHBOARD</Text>
-
+      <Spacer y={2} />
       {users?.length > 0 ? (
         <Table
           aria-label="Example static collection table"
@@ -107,14 +78,16 @@ export default function AdminMainPage() {
                 <Table.Cell>{user.kbis}</Table.Cell>
                 <Table.Cell>{user.role}</Table.Cell>
                 <Table.Cell>
-                  <Badge
-                    color={user?.isVerified === true ? "success" : "error"}
-                  >
-                    {user?.isVerified === true ? "Activer" : "Pas activer"}
-                  </Badge>
+                  {user.role.includes("USER") && (
+                    <Badge
+                      color={user?.isVerified === true ? "success" : "error"}
+                    >
+                      {user?.isVerified === true ? "Activer" : "Pas activer"}
+                    </Badge>
+                  )}
                 </Table.Cell>
                 <Table.Cell>
-                  {!user?.isVerified ? (
+                  {!user?.isVerified && user.role.includes("USER") && (
                     <Row>
                       <Button
                         auto
@@ -126,16 +99,20 @@ export default function AdminMainPage() {
                         Valider le compte
                       </Button>
                     </Row>
-                  ) : (
-                    <Button
-                      auto
-                      color="error"
-                      rounded
-                      flat
-                      onPress={() => handleRefuseUser(user.uid)}
-                    >
-                      Repasser en attente
-                    </Button>
+                  )}
+
+                  {user?.isVerified && user.role.includes("USER") && (
+                    <Row>
+                      <Button
+                        auto
+                        color="error"
+                        rounded
+                        flat
+                        onPress={() => handleRefuseUser(user.uid)}
+                      >
+                        Repasser en attente
+                      </Button>
+                    </Row>
                   )}
                 </Table.Cell>
               </Table.Row>
