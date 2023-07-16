@@ -24,6 +24,10 @@ export default function AdminMainPage() {
         isVerified: true,
       });
     })();
+
+    const usersData = await db.user.getAll();
+    // @ts-ignore
+    setUsers(usersData);
   };
 
   const columns = [
