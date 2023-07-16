@@ -85,9 +85,9 @@ export const SidebarAdmin = () => {
           </Flex>
 
           <MenuItem
-            component={<Link href="/admin" />}
+            component={<Link href="/dashboard" />}
             icon={
-              pathname === "/admin" ? (
+              pathname === "/dashboard" ? (
                 <ChartDonut size={25} color="black" weight="fill" />
               ) : (
                 <ChartDonut size={25} color="#e0dfdb" weight="light" />
