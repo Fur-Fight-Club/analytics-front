@@ -59,8 +59,13 @@ export interface DoughnutWidget extends BaseWidget {
   chartName: string;
 }
 
+export enum TableStat {
+  UNIQUE_BUTTON_CLICKS = "UNIQUE_BUTTON_CLICKS",
+  AVERAGE_TIME_SPENT = "AVERAGE_TIME_SPENT",
+}
 export interface TableWidget extends BaseWidget {
   type: WidgetType.TABLE;
+  tableStat: TableStat;
 }
 
 export type Widget =
