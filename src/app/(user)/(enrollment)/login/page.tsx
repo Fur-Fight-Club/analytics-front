@@ -1,12 +1,12 @@
 "use client";
-import { Grid, Card, Input, Text, Spacer, Button } from "@nextui-org/react";
-import { useState } from "react";
-import { toast } from "react-hot-toast";
 import { auth, db } from "@/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { User, initialUser } from "@/types/user.type";
+import { Button, Card, Grid, Input, Spacer, Text } from "@nextui-org/react";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -54,7 +54,6 @@ export default function RegisterPage() {
           const errorMessage = error.message;
           toast.error(errorMessage);
           console.log(errorCode, errorMessage);
-          // ..
         });
     }
   };

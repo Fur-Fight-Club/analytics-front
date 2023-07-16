@@ -1,19 +1,19 @@
-import firebase, { initializeApp } from "firebase/app";
-import { User, getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
   addDoc,
-  updateDoc,
   collection,
   deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  setDoc,
+  updateDoc,
 } from "firebase/firestore";
-import { UserDb } from "./types/user.type";
-import { Application } from "./types/application.type";
 import { toast } from "react-hot-toast";
+import { Application } from "./types/application.type";
+import { User, UserDb } from "./types/user.type";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCZ1viKnJtYQfHEYAUHZTLCdnulMu-bfsI",
@@ -33,6 +33,7 @@ const user = {
     const userDocData = await db.getDoc(userDoc);
     const userData = userDocData.data();
     return {
+      uid: userDocData.id,
       isVerified: userData!.isVerified,
       companyName: userData!.companyName,
       kbis: userData!.kbis,
@@ -43,6 +44,28 @@ const user = {
       clientSecret: userData!.clientSecret,
     };
   },
+
+  getAll: async (): Promise<UserDb[]> => {
+    const usersCollection = await db.collection(db.firestore, "users");
+    const usersCollectionData = await db.getDocs(usersCollection);
+    const usersData = usersCollectionData.docs.map((doc) => {
+      const userData = doc.data();
+      return {
+        uid: doc.id,
+        isVerified: userData.isVerified,
+        companyName: userData.companyName,
+        kbis: userData.kbis,
+        phoneNumber: userData.phoneNumber,
+        websiteURL: userData.websiteURL,
+        role: userData.role,
+        clientId: userData.clientId,
+        clientSecret: userData.clientSecret,
+      };
+    });
+
+    return usersData as User[];
+  },
+
   update: async (uid: string, data: Partial<UserDb>) => {
     try {
       const docRef = db.doc(db.firestore, "users", uid);

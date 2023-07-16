@@ -5,8 +5,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { Flex } from "@/styles/flex";
-import { Button, Spacer } from "@nextui-org/react";
+import { User, initialUser } from "@/types/user.type";
+import { Button } from "@nextui-org/react";
 import {
   AppWindow,
   CaretCircleLeft,
@@ -16,13 +18,20 @@ import {
 } from "@phosphor-icons/react";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 
-export const SidebarAdmin = () => {
+export const SidebarUser = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isRedirecting, setIsRedirecting] = useState(false);
 
+  const [user, setUser] = useLocalStorage<User>("user", initialUser);
+
   const { collapseSidebar } = useProSidebar();
   const [collapsed, setCollapsed] = useState(false);
+
+  const logoutUser = () => {
+    setUser(initialUser);
+    router.push("/");
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,6 +58,7 @@ export const SidebarAdmin = () => {
   };
 
   const handleLogout = () => {
+    logoutUser();
     redirectTo("/");
   };
 
@@ -111,18 +121,9 @@ export const SidebarAdmin = () => {
             Mes apps
           </MenuItem>
 
-          <Spacer y={1.5} />
-
-          <MenuItem
-            icon={<House size={25} color="#e0dfdb" weight="light" />}
-            onClick={() => router.push("/")}
-          >
-            Retour page d'accueil
-          </MenuItem>
-
           <MenuItem
             icon={<SignOut size={25} color="#e0dfdb" weight="light" />}
-            onClick={() => null}
+            onClick={() => handleLogout()}
           >
             Se déconnecter
           </MenuItem>

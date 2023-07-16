@@ -13,7 +13,7 @@ type AdminLayoutProps = {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
 
-  if (!checkIfUserIsAdmin(user)) {
+  if (checkIfUserIsAdmin(user)) {
     return (
       <main style={{ height: "100%" }}>
         <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>

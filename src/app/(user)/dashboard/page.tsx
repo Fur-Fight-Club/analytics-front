@@ -1,14 +1,26 @@
 "use client";
 
+import { db } from "@/firebase";
 import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { initialUser, User } from "@/types/user.type";
 import { Card, Grid, Input, Spacer, Text } from "@nextui-org/react";
 import crypto from "crypto";
+import { useEffect } from "react";
 
 export default function DashboardPage() {
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
   var token = crypto.randomBytes(48).toString("hex");
   console.log(token);
+
+  //get User
+  useEffect(() => {
+    (async () => {
+      const myUser = await db.user.get(user.uid);
+
+      // @ts-ignore
+      setUser(myUser);
+    })();
+  }, []);
 
   return (
     <div>
