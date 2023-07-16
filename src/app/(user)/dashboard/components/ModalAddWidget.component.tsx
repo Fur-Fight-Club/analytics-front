@@ -1,7 +1,7 @@
 "use client";
 
 import { db } from "@/firebase";
-import { WatchedStat, Widget, WidgetType } from "@/types/widget.type";
+import { LineStat, WatchedStat, Widget, WidgetType } from "@/types/widget.type";
 import { Modal, Button, Spacer, Text, Radio, Input } from "@nextui-org/react";
 import { Select } from "antd";
 import * as React from "react";
@@ -143,11 +143,61 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
     </>
   );
 
+  const [lineStat, setLineStat] = React.useState<LineStat>(LineStat.VISITS);
+  const [lineName, setLineName] = React.useState<string>("");
+  const [lineDays, setLineDays] = React.useState<number>(7);
   const renderLineOptions = () => (
     <>
       <Text h4>Paramètrer le graphique en ligne</Text>
+      <Text>Statistique à surveiller</Text>
+      <Select
+        defaultValue={LineStat.VISITS}
+        style={{ width: "100%" }}
+        onChange={(value) => setLineStat(value as LineStat)}
+        dropdownStyle={{ zIndex: 9999 }}
+        value={lineStat}
+        options={[
+          { label: "Nombre de visites par jours", value: LineStat.VISITS },
+        ]}
+      />
+      <Input
+        label="Nom du graphique"
+        placeholder="Nombre de visites"
+        fullWidth
+        value={lineName}
+        onChange={(e) => setLineName(e.target.value)}
+        size="lg"
+      />
+      <Input
+        label="Nombre de jours"
+        placeholder="7"
+        fullWidth
+        value={lineDays}
+        onChange={(e) => setLineDays(+e.target.value)}
+        size="lg"
+      />
     </>
   );
+  const handleAddLineWidget = () => {
+    if (!lineName || !lineDays || !lineStat) {
+      toast.error("Veuillez remplir tous les champs");
+    } else {
+      db.widgets
+        .create({
+          id: uuidv4(),
+          type: WidgetType.LINE,
+          appId,
+          chartName: lineName,
+          days: lineDays,
+          lineStat: lineStat as LineStat,
+          position: widgetLength ? widgetLength : 0,
+        })
+        .then(() => {
+          handleCloseModal();
+          onValidate();
+        });
+    }
+  };
 
   const renderTableOptions = () => (
     <>
@@ -162,6 +212,16 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
     // Clean HEATMAP options
     setPageHeatmap("");
     setImageHeatmap("");
+
+    // Clean KPI options
+    setKpiText("");
+    setKpiUnit("");
+    setKpiWatchedStat(WatchedStat.BUTTON_CLICKS);
+
+    // Clean LINE options
+    setLineStat(LineStat.VISITS);
+    setLineName("");
+    setLineDays(7);
   };
 
   return (
@@ -208,6 +268,8 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
               ? handleAddHeatmapWidget()
               : widgetType === WidgetType.KPI
               ? handleAddKpiWidget()
+              : widgetType === WidgetType.LINE
+              ? handleAddLineWidget()
               : () => console.log("IMPLEMENT ME")
           }
         >
