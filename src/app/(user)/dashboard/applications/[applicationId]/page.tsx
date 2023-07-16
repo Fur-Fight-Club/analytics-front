@@ -42,6 +42,7 @@ const ApplicationDashboard = ({
       <Spacer y={1} />
       <Text h2>Test doughtnutChart</Text>
       {/* TODO : Update with real data from firestore */}
+      <Spacer y={0.5} />
       <DoughnutChart
         labels={chartsData?.averages.timeSpent.labels ?? []}
         dataset={{
@@ -49,6 +50,17 @@ const ApplicationDashboard = ({
           data: chartsData?.averages.timeSpent.data ?? [],
         }}
         loading={isFetchingChartsData}
+      >
+        Temps passé en moyenne sur une page
+      </DoughnutChart>
+      <Spacer y={0.5} />
+      <DoughnutChart
+        labels={chartsData?.averages.timeSpent.labels ?? []}
+        dataset={{
+          label: "Temps passé en moyenne (en ms)",
+          data: chartsData?.averages.timeSpent.data ?? [],
+        }}
+        loading={true}
       >
         Temps passé en moyenne sur une page
       </DoughnutChart>
