@@ -17,10 +17,16 @@ export interface HeatmapWidget extends BaseWidget {
   pagePicture: string;
 }
 
-export interface LineWidget extends BaseWidget {}
+export interface LineWidget extends BaseWidget {
+  type: WidgetType.LINE;
+}
 
-export interface DoughnutWidget extends BaseWidget {}
+export interface DoughnutWidget extends BaseWidget {
+  type: WidgetType.DOUGHNUT;
+}
 
-export interface TableWidget extends BaseWidget {}
+export interface TableWidget extends BaseWidget {
+  type: WidgetType.TABLE;
+}
 
 export type Widget = HeatmapWidget | LineWidget | DoughnutWidget | TableWidget;
