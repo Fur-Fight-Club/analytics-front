@@ -12,6 +12,7 @@ import { User, initialUser } from "@/types/user.type";
 import { Loading } from "@nextui-org/react";
 
 import {
+  DoughnutStat,
   TableStat,
   WatchedStat,
   Widget,
@@ -209,7 +210,55 @@ const ApplicationDashboard = ({
       <Grid.Container gap={2}>
         {widgets?.map((w: Widget, key) => {
           if (w.type === WidgetType.DOUGHNUT) {
-            return;
+            return (
+              <Grid
+                xs={12}
+                md={6}
+                css={{
+                  height: "42vh",
+                }}
+              >
+                <DoughnutChart
+                  labels={
+                    (w.doughnutStat === DoughnutStat.AVERAGE_TIME_SPENT
+                      ? chartData?.averages.timeSpent.labels
+                      : w.doughnutStat === DoughnutStat.BROWSERS_PROPORTIONS
+                      ? chartData?.proportions.browser.labels
+                      : w.doughnutStat === DoughnutStat.COUNTRIES_PROPORTIONS
+                      ? chartData?.proportions.country.labels
+                      : w.doughnutStat ===
+                        DoughnutStat.INTERNET_PROVIDERS_PROPORTIONS
+                      ? chartData?.proportions.provider.labels
+                      : w.doughnutStat === DoughnutStat.LANGUAGES_PROPORTIONS
+                      ? chartData?.proportions.lang.labels
+                      : w.doughnutStat === DoughnutStat.PLATFORMS_PROPORTIONS
+                      ? chartData?.proportions.platform.labels
+                      : []) ?? []
+                  }
+                  dataset={{
+                    label: w.chartName,
+                    data:
+                      (w.doughnutStat === DoughnutStat.AVERAGE_TIME_SPENT
+                        ? chartData?.averages.timeSpent.data
+                        : w.doughnutStat === DoughnutStat.BROWSERS_PROPORTIONS
+                        ? chartData?.proportions.browser.data
+                        : w.doughnutStat === DoughnutStat.COUNTRIES_PROPORTIONS
+                        ? chartData?.proportions.country.data
+                        : w.doughnutStat ===
+                          DoughnutStat.INTERNET_PROVIDERS_PROPORTIONS
+                        ? chartData?.proportions.provider.data
+                        : w.doughnutStat === DoughnutStat.LANGUAGES_PROPORTIONS
+                        ? chartData?.proportions.lang.data
+                        : w.doughnutStat === DoughnutStat.PLATFORMS_PROPORTIONS
+                        ? chartData?.proportions.platform.data
+                        : []) ?? [],
+                  }}
+                  loading={isFetchingChartsData}
+                >
+                  {w.chartName}
+                </DoughnutChart>
+              </Grid>
+            );
           } else if (w.type === WidgetType.LINE) {
             return (
               <Grid
