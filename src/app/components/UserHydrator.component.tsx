@@ -16,18 +16,11 @@ export const UserHydrator: React.FunctionComponent<
   const [user, setUser] = useLocalStorage<User>("user", initialUser);
   useEffect(() => {
     (async () => {
-      const userDoc = await db.doc(db.firestore, "users", user.uid);
-      const userDocData = await db.getDoc(userDoc);
-      const userData = userDocData.data();
+      const userData = await db.user.get(user.uid);
       setUser({
         uid: user.uid,
         email: user.email,
-        isVerified: userData!.isVerified,
-        companyName: userData!.companyName,
-        kbis: userData!.kbis,
-        phoneNumber: userData!.phoneNumber,
-        websiteURL: userData!.websiteURL,
-        role: userData!.role,
+        ...userData,
       });
     })();
     console.log("refetching user data from Firestore...");
