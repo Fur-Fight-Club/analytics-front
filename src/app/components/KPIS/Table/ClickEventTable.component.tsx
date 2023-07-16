@@ -2,7 +2,6 @@
 
 import { Badge, Button, Card, Table } from "@nextui-org/react";
 import * as React from "react";
-import { ButtonClickEvent } from "src/store/application/constants";
 
 interface ClickEventTableProps {
   data: {

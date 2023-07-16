@@ -2,18 +2,16 @@
 
 import * as React from "react";
 // @ts-ignore
-import styles from "./ClickHeatmap.module.scss";
-import { useEffect, useRef } from "react";
-import { useGetHeatmapDataMutation } from "src/store/application/slice";
-import { HeatmapData } from "src/store/application/application.model";
-import L from "leaflet";
+import { HeatmapData } from "@models/index";
 // @ts-ignore
-import { Map, ImageOverlay } from "react-leaflet";
+import L from "leaflet";
+import { useEffect, useRef } from "react";
+// @ts-ignore
 import "leaflet/dist/leaflet.css";
 // @ts-ignore
+import { ImageOverlay, Map } from "react-leaflet";
+// @ts-ignore
 import HeatmapLayer from "react-leaflet-heatmap-layer";
-import { useSelector } from "react-redux";
-import { applicationState } from "src/store/application/selector";
 
 interface ClickHeatmapProps {
   route: string;
@@ -28,7 +26,8 @@ export const ClickHeatmap: React.FunctionComponent<ClickHeatmapProps> = ({
   count,
   heatmapImage,
 }) => {
-  const { token } = useSelector(applicationState);
+  // TODO replace token here by the real user's token
+  const token = "EXAMPLE_TOKEN";
   var bounds = [
     [100, 0],
     [0, 100],
