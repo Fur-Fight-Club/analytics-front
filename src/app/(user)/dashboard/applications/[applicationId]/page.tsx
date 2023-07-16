@@ -20,6 +20,7 @@ const ApplicationDashboard = ({
     db.application.get(params.applicationId).then((app) => {
       setApplication(app);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

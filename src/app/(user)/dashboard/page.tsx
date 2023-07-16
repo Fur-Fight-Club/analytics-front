@@ -3,7 +3,16 @@
 import { db } from "@/firebase";
 import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { initialUser, User } from "@/types/user.type";
-import { Card, Grid, Input, Spacer, Text } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Col,
+  Grid,
+  Input,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import crypto from "crypto";
 import { useEffect } from "react";
 
@@ -100,8 +109,114 @@ export default function DashboardPage() {
                 </Card.Body>
               </Card>
             </Grid>
-            <Grid xs={12} md={4}></Grid>
+            <Grid xs={12} md={4}>
+              <Card>
+                <Card.Header>
+                  <Text h3>Télécharger le SDK</Text>
+                </Card.Header>
+                <Card.Body>
+                  <Button>
+                    <a href="/AnalyticsSDK.zip">Download</a>
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Grid>
           </Grid.Container>
+          <Card>
+            <Card.Header>
+              <Text h3>Description du SDK</Text>
+            </Card.Header>
+            <Card.Body>
+              <Row>
+                <Col>
+                  <Text h3>Props : </Text>
+                  <Spacer y={0.5} />
+                  <Text h3>children: any</Text>
+                  <Text small>
+                    Les éléments enfants du composant `AnalyticsWrapper`.
+                  </Text>
+                  <Spacer y={0.5} />
+                  <Text h3>clientId: string</Text>
+                  <Text small>
+                    Identifiant unique qui est associé à une application
+                    spécifique.
+                  </Text>
+                  <Spacer y={0.5} />
+                  <Text h3>appId: string</Text>
+                  <Text small>
+                    Identifiant unique qui est associé à une application
+                    spécifique.
+                  </Text>
+                  <Spacer y={0.5} />
+                  <Text h3>clientSecret: string</Text>
+                  <Text small>
+                    Identifiant unique qui est associé à une application
+                    spécifique. Utilisée pour prouver que l'application est
+                    autorisée à accéder à l'API
+                  </Text>
+                  <Spacer y={0.5} />
+                  <Text h3>analyticsEndpoint: string (facultatif)</Text>
+                  <Text small>L'URL de votre endpoint.</Text>
+                  <Spacer y={0.5} />
+                  <Text h3>userId: number</Text>
+                  <Text small>Identifiant de l'utilisateur</Text>
+                  <Spacer y={0.5} />
+                  <Text h3>analyticId: string</Text>
+                  <Text small>
+                    Identifiant unique du navigateur de l'utilisateur.
+                  </Text>
+                  <Spacer y={0.5} />
+                  <Text h3>analyticsEnabled: boolean</Text>
+                  <Text small>Activer/desactiver l'analyse.</Text>
+                  <Spacer y={0.5} />
+                  <Text h3>pageVisited: array</Text>
+                  <Text small>
+                    Un tableau contenant les informations sur les pages
+                    visitées, avec chaque élément ayant une propriété `page`
+                    pour le nom de la page et `timestamp` pour l'heure et la
+                    date de visite.
+                  </Text>
+                </Col>
+                <Col>
+                  <Text h3>Endpoints : </Text>
+                  <Spacer y={0.5} />
+                  <Text h4>/leave-app</Text>
+                  <Text small>
+                    Endpoint utilisé pour envoyer une requête POST lorsque
+                    l'utilisateur quitte l'application. Il envoie les
+                    informations sur les pages visitées, l'utilisateur, le
+                    navigateur et le système d'exploitation utilisés.
+                  </Text>
+                  <Spacer y={1} />
+                  <Text h4>/pathname-change</Text>
+                  <Text small>
+                    Endpoint utilisé pour envoyer une requête POST lorsqu'il y a
+                    un changement d'URL dans l'application. Il envoie les
+                    informations sur la page visitée, l'utilisateur, le
+                    navigateur et le système d'exploitation utilisés.
+                  </Text>
+                  <Spacer y={1} />
+                  <Text h4>/mouse-click</Text>
+                  <Text small>
+                    Endpoint utilisé pour envoyer une requête POST lorsqu'un
+                    utilisateur clique sur un élément de l'application. Il
+                    envoie les informations sur la position du clic, la fenêtre
+                    du navigateur, la page visitée, l'utilisateur, le navigateur
+                    et le système d'exploitation utilisés.
+                  </Text>
+                  <Spacer y={1} />
+                  <Text h4>/demographic-data</Text>
+                  <Text small>
+                    Endpoint utilisé pour envoyer une requête POST afin
+                    d'obtenir et d'envoyer des données démographiques de
+                    l'utilisateur, telles que son adresse IP. Ces données sont
+                    récupérées à partir de l'API externe
+                    "https://api.ipify.org".
+                  </Text>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
         </div>
       ) : (
         <div>

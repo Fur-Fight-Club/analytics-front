@@ -18,7 +18,7 @@ export default function AdminLayout({ children }: DashboardLayoutProps) {
 
   if (!checkIfUserIsAdmin(user) && checkIfUserIsLoggedIn(user)) {
     return (
-      <main style={{ height: "100vh", backgroundColor: "#f9f9f9" }}>
+      <main style={{ minHeight: "100vh", backgroundColor: "#f9f9f9" }}>
         <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
           <ProSidebarProvider>
             <SidebarUser />
