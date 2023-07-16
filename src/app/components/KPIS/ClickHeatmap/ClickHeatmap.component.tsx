@@ -2,7 +2,7 @@
 
 import * as React from "react";
 // @ts-ignore
-import { HeatmapData } from "@models/index";
+import { HeatmapData } from "@types/analytics.type";
 // @ts-ignore
 import L from "leaflet";
 import { useEffect, useRef } from "react";
@@ -85,6 +85,7 @@ export const ClickHeatmap: React.FunctionComponent<ClickHeatmapProps> = ({
         }) ?? [];
       setHeatmapData(points);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success]);
 
   useEffect(() => {

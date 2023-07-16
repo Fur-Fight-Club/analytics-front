@@ -20,6 +20,7 @@ export const generateRandomColors = (x: number) => {
     const g = Math.floor(Math.random() * 255);
     const b = Math.floor(Math.random() * 255);
 
+    // @ts-ignore
     colors.push([`rgba(${r},${g},${b},1)`, `rgba(${r},${g},${b},.2)`]);
   }
   return colors;
