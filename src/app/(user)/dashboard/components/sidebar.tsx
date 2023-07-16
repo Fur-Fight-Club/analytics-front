@@ -5,21 +5,16 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { Flex } from "@/styles/flex";
+import { Button, Spacer } from "@nextui-org/react";
 import {
   AppWindow,
   CaretCircleLeft,
   ChartDonut,
-  CreditCard,
-  Ghost,
   House,
-  MapPin,
   SignOut,
-  UserRectangle,
-  UsersFour,
 } from "@phosphor-icons/react";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
-import { Flex } from "@/styles/flex";
-import { Button, Spacer } from "@nextui-org/react";
 
 export const SidebarAdmin = () => {
   const router = useRouter();
@@ -107,7 +102,11 @@ export const SidebarAdmin = () => {
                 <AppWindow size={25} color="#e0dfdb" weight="light" />
               )
             }
-            style={pathname === "/dashboard/apps" ? { fontWeight: "bold" } : {}}
+            style={
+              pathname === "/dashboard/applications"
+                ? { fontWeight: "bold" }
+                : {}
+            }
           >
             Mes apps
           </MenuItem>
