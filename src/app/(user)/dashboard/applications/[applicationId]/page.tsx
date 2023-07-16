@@ -49,6 +49,8 @@ const ApplicationDashboard = ({
 
   const fetchWidgets = () => {
     db.widgets.get(params.applicationId).then((widgets) => {
+      // Sort widgets by positions
+      widgets.sort((a, b) => a.position - b.position);
       setWidgets(widgets);
     });
   };
