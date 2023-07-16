@@ -41,6 +41,8 @@ export default function RegisterPage() {
             phoneNumber: userData!.phoneNumber,
             websiteURL: userData!.websiteURL,
             role: userData!.role,
+            clientId: userData!.clientId,
+            clientSecret: userData!.clientSecret,
           });
 
           if (userData!.role === "ADMIN") {
