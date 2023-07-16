@@ -26,7 +26,7 @@ const ApplicationDashboard = ({
     });
 
     db.widgets.get(params.applicationId).then((widgets) => {
-      console.log(widgets);
+      setWidgets(widgets);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -67,10 +67,17 @@ const ApplicationDashboard = ({
           cliquant sur "Ajouter un widget" en haut à droite.
         </Text>
       )}
+      {widgets?.map((w: Widget, key) => (
+        <Text key={key}>
+          {w.type} — {w.id}
+        </Text>
+      ))}
       <ModalAddWidget
         visible={modalVisible}
         handleClose={() => setModalVisible(false)}
         onValidate={() => {}}
+        appId={params.applicationId}
+        widgetLength={widgets?.length}
       />
     </div>
   );
