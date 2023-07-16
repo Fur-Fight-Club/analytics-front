@@ -7,3 +7,7 @@ export const checkIfUserIsLoggedIn = (user: User) => {
 export const checkIfUserIsAdmin = (user: User) => {
   return user?.role?.includes("ADMIN");
 };
+
+export const getInitials = (firstName: string, lastName: string) => {
+  return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+};
