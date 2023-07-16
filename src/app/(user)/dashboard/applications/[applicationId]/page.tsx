@@ -2,6 +2,7 @@
 
 import { DoughnutChart } from "@/app/components/KPIS/Chart/DoughnutChart.component";
 import { LineChart } from "@/app/components/KPIS/Chart/LineChart.component";
+import { KpiAdminCard } from "@/app/components/KPIS/KpiAdminCard";
 import { AverageTimeSpentTable } from "@/app/components/KPIS/Table/AverageTimeSpentTable.component";
 import { ClickEventTable } from "@/app/components/KPIS/Table/ClickEventTable.component";
 import { db } from "@/firebase";
@@ -28,6 +29,10 @@ const ApplicationDashboard = ({
 
   const [tablesData, settablesData] = useState<{}>();
   const [isFetchingTablesData, setIsFetchingTablesData] = useState(false);
+
+  const [statsCardsData, setStatsCardsData] = useState<{}>();
+  const [isFetchingStatsCardsData, setIsFetchingStatsCardsData] =
+    useState(false);
 
   useEffect(() => {
     db.application.get(params.applicationId).then((app) => {
@@ -94,6 +99,7 @@ const ApplicationDashboard = ({
       >
         Nombre de visite des 7 derniers jours
       </LineChart>
+
       <Spacer y={1} />
       <Text h2>Test Tables</Text>
 
@@ -102,6 +108,15 @@ const ApplicationDashboard = ({
       <Spacer y={0.5} />
 
       <ClickEventTable data={tablesData?.click ?? []} />
+
+      <Spacer y={1} />
+
+      <Text h2>Test KPI Card</Text>
+
+      <KpiAdminCard
+        label="Clics boutons"
+        amount={statsCardsData?.button ?? 0}
+      />
     </div>
   );
 };
