@@ -1,7 +1,13 @@
 "use client";
 
 import { db } from "@/firebase";
-import { LineStat, WatchedStat, Widget, WidgetType } from "@/types/widget.type";
+import {
+  DoughnutStat,
+  LineStat,
+  WatchedStat,
+  Widget,
+  WidgetType,
+} from "@/types/widget.type";
 import { Modal, Button, Spacer, Text, Radio, Input } from "@nextui-org/react";
 import { Select } from "antd";
 import * as React from "react";
@@ -137,11 +143,77 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
     }
   };
 
+  const [doughnutName, setDoughnutName] = React.useState<string>("");
+  const [doughnutStat, setDoughnutStat] = React.useState<DoughnutStat>(
+    DoughnutStat.AVERAGE_TIME_SPENT
+  );
   const renderDoughnutOptions = () => (
     <>
       <Text h4>Paramètrer le graphique doughnut</Text>
+      <Text>Statistique à surveiller</Text>
+      <Select
+        defaultValue={DoughnutStat.AVERAGE_TIME_SPENT}
+        style={{ width: "100%" }}
+        onChange={(value) => setDoughnutStat(value)}
+        dropdownStyle={{ zIndex: 9999 }}
+        value={doughnutStat}
+        options={[
+          {
+            label: "Temps moyen passé par pages",
+            value: DoughnutStat.AVERAGE_TIME_SPENT,
+          },
+          {
+            label: "Proportion des plateformes",
+            value: DoughnutStat.PLATFORMS_PROPORTIONS,
+          },
+          {
+            label: "Proportion des navigateurs",
+            value: DoughnutStat.BROWSERS_PROPORTIONS,
+          },
+          {
+            label: "Proportion des langues",
+            value: DoughnutStat.LANGUAGES_PROPORTIONS,
+          },
+          {
+            label: "Proportion des pays",
+            value: DoughnutStat.COUNTRIES_PROPORTIONS,
+          },
+          {
+            label: "Proportion des fournisseurs d'accès internet",
+            value: DoughnutStat.INTERNET_PROVIDERS_PROPORTIONS,
+          },
+        ]}
+      />
+
+      <Input
+        label="Nom du graphique"
+        placeholder="Temps moyen passé sur le site"
+        fullWidth
+        value={doughnutName}
+        onChange={(e) => setDoughnutName(e.target.value)}
+        size="lg"
+      />
     </>
   );
+  const handleAddDoughnutWidget = () => {
+    if (!doughnutName || !doughnutStat) {
+      toast.error("Veuillez remplir tous les champs");
+    } else {
+      db.widgets
+        .create({
+          id: uuidv4(),
+          type: WidgetType.DOUGHNUT,
+          appId,
+          doughnutStat: doughnutStat as DoughnutStat,
+          position: widgetLength ? widgetLength : 0,
+          chartName: doughnutName,
+        })
+        .then(() => {
+          handleCloseModal();
+          onValidate();
+        });
+    }
+  };
 
   const [lineStat, setLineStat] = React.useState<LineStat>(LineStat.VISITS);
   const [lineName, setLineName] = React.useState<string>("");
@@ -222,6 +294,10 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
     setLineStat(LineStat.VISITS);
     setLineName("");
     setLineDays(7);
+
+    // Clean DOUGHNUT options
+    setDoughnutName("");
+    setDoughnutStat(DoughnutStat.AVERAGE_TIME_SPENT);
   };
 
   return (
@@ -270,6 +346,8 @@ export const ModalAddWidget: React.FunctionComponent<ModalAddWidgetProps> = ({
               ? handleAddKpiWidget()
               : widgetType === WidgetType.LINE
               ? handleAddLineWidget()
+              : widgetType === WidgetType.DOUGHNUT
+              ? handleAddDoughnutWidget()
               : () => console.log("IMPLEMENT ME")
           }
         >
