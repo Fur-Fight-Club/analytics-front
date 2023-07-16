@@ -1,6 +1,9 @@
 "use client";
 
+import { useLocalStorage } from "@/hooks/localStorage.hook";
 import { Flex } from "@/styles/flex";
+import { User, initialUser } from "@/types/user.type";
+import { checkIfUserIsAdmin, checkIfUserIsLoggedIn } from "@/utils/utils";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import { SidebarUser } from "./components/sidebar";
 
@@ -9,16 +12,22 @@ type AdminLayoutProps = {
 };
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  return (
-    <main style={{ height: "100vh", backgroundColor: "#f9f9f9" }}>
-      <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
-        <ProSidebarProvider>
-          <SidebarUser />
-          <Flex direction={"column"} style={{ width: "100%" }}>
-            <div style={{ margin: "40px" }}>{children}</div>
-          </Flex>
-        </ProSidebarProvider>
-      </div>
-    </main>
-  );
+  const [user, setUser] = useLocalStorage<User>("user", initialUser);
+
+  if (!checkIfUserIsAdmin(user) && checkIfUserIsLoggedIn(user)) {
+    return (
+      <main style={{ height: "100vh", backgroundColor: "#f9f9f9" }}>
+        <div style={{ display: "flex", flexDirection: "row", height: "100%" }}>
+          <ProSidebarProvider>
+            <SidebarUser />
+            <Flex direction={"column"} style={{ width: "100%" }}>
+              <div style={{ margin: "40px" }}>{children}</div>
+            </Flex>
+          </ProSidebarProvider>
+        </div>
+      </main>
+    );
+  } else {
+    throw new Error("Vous devez être utilisateurs pour accéder à cette page");
+  }
 }
