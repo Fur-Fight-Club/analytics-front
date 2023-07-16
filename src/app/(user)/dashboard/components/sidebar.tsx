@@ -94,9 +94,9 @@ export const SidebarAdmin = () => {
           </MenuItem>
 
           <MenuItem
-            component={<Link href="/dashboard/apps" />}
+            component={<Link href="/dashboard/applications" />}
             icon={
-              pathname === "/dashboard/apps" ? (
+              pathname === "/dashboard/applications" ? (
                 <AppWindow size={25} color="black" weight="fill" />
               ) : (
                 <AppWindow size={25} color="#e0dfdb" weight="light" />
