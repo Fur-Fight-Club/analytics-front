@@ -63,17 +63,6 @@ const ApplicationDashboard = ({
         Temps passé en moyenne sur une page
       </DoughnutChart>
 
-      <Spacer y={0.5} />
-      <DoughnutChart
-        labels={chartsData?.averages.timeSpent.labels ?? []}
-        dataset={{
-          label: "Temps passé en moyenne (en ms)",
-          data: chartsData?.averages.timeSpent.data ?? [],
-        }}
-        loading={true}
-      >
-        Temps passé en moyenne sur une page
-      </DoughnutChart>
       <Spacer y={1} />
       <Text h2>Test lineChart</Text>
 
